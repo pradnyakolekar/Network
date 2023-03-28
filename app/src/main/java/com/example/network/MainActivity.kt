@@ -29,16 +29,20 @@ class MainActivity : AppCompatActivity(){
     var context = this
     var connectivity : ConnectivityManager? = null
     var info : NetworkInfo? = null
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val ntwspeed = findViewById<TextView>(R.id.ntwspeed)
-        val ntwbtn = findViewById<Button>(R.id.checknetworkbtn)
-        val ntwtype = findViewById<TextView>(R.id.ntwtype)
+        val btndisplay = findViewById<Button>(R.id.display)
+        val btndrm = findViewById<Button>(R.id.drm)
+        val btncodec = findViewById<Button>(R.id.codec)
 
         screenValue()
 
+        btndisplay.setOnClickListener(){
+
+        }
         var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
         val codeclist=mediaCodecList.joinToString(separator = ",")
         Log.i("media codec", codeclist)
@@ -79,11 +83,11 @@ class MainActivity : AppCompatActivity(){
         Log.i("Display","$display")
 
 
-        ntwbtn.setOnClickListener(){
-            ntwspeed.setText(getNetworkSpeed(this))
-            ntwtype.setText(getNetworkClass(this))
-        }
-        registerReceiver()
+//        ntwbtn.setOnClickListener(){
+//            ntwspeed.setText(getNetworkSpeed(this))
+//            ntwtype.setText(getNetworkClass(this))
+//        }
+//        registerReceiver()
 
 
 
