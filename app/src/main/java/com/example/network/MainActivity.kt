@@ -1,6 +1,7 @@
 package com.example.network
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
@@ -38,49 +39,31 @@ class MainActivity : AppCompatActivity(){
         val btndrm = findViewById<Button>(R.id.drm)
         val btncodec = findViewById<Button>(R.id.codec)
 
-        screenValue()
-
         btndisplay.setOnClickListener(){
-
+            val bundle = Bundle()
+            bundle.putString("id", "display")
+            val intent = Intent(this, DeviceInfo::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
-        var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
-        val codeclist=mediaCodecList.joinToString(separator = ",")
-        Log.i("media codec", codeclist)
+        btndrm.setOnClickListener(){
+            val bundle = Bundle()
+            bundle.putString("id", "drm")
+            val intent = Intent(this, DeviceInfo::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
 
-
-        val WIDEVINE_UUID = UUID(-0x121074568629b532L,-0x5c37d8232ae2de13L)
-        val mediaDrm = MediaDrm(WIDEVINE_UUID)
-        val vendor = mediaDrm.getPropertyString(MediaDrm.PROPERTY_VENDOR)
-        val version = mediaDrm.getPropertyString(MediaDrm.PROPERTY_VERSION)
-        val description = mediaDrm.getPropertyString(MediaDrm.PROPERTY_DESCRIPTION)
-        val algorithms = mediaDrm.getPropertyString(MediaDrm.PROPERTY_ALGORITHMS)
-        //val securityLevel=mediaDrm.getPropertyString("SecurityLevel")
-        var hdcp: String? = null
-        val securityLevel = mediaDrm.getPropertyString("securityLevel")
-        val systemId = mediaDrm.getPropertyString("systemId")
-        val hdcpLevel = mediaDrm.getPropertyString("hdcpLevel")
-        val maxHdcpLevel = mediaDrm.getPropertyString("maxHdcpLevel")
-        val usageReportingSupport = mediaDrm.getPropertyString("usageReportingSupport")
-        val maxNumberOfSessions = mediaDrm.getPropertyString("maxNumberOfSessions")
-        val numberOfOpenSessions = mediaDrm.getPropertyString("numberOfOpenSessions")
-        val display=windowManager.defaultDisplay
-        val displayId = windowManager.defaultDisplay.displayId
-        val refreshRate=windowManager.defaultDisplay.refreshRate
-//        val deviceInfo=windowManager.defaultDisplay.deviceProductInfo
-//        val name=windowManager.defaultDisplay.name.toString()
-//        val hdr=windowManager.defaultDisplay.isHdr
-//        val hdrCapabilities=windowManager.defaultDisplay.hdrCapabilities
-//        val crypto=mediaDrm.metrics.toString()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-         hdcp = mediaDrm.connectedHdcpLevel.toString()
-         }
-
-        Log.i("WideVine",
-            "Vendor-$vendor Version-$version desc-$description Algorithn-$algorithms HDCP-$hdcp Security Level-$securityLevel SystemId-$systemId HDCPLevel-$hdcpLevel MaxHDCPLevel-$maxHdcpLevel usageReportingSupport-$usageReportingSupport maxNumberOfSessions-$maxNumberOfSessions numberOfOpenSessions-$numberOfOpenSessions")
-        Log.i("Display",
-        "displayId-$displayId \n refreshRate-$refreshRate ")
-//      deviceInfo-$deviceInfo name-$name hdr-$hdr hdrCapabilities-$hdrCapabilities")
-        Log.i("Display","$display")
+        btncodec.setOnClickListener(){
+            val bundle = Bundle()
+            bundle.putString("id", "codec")
+            var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
+            val codeclist=mediaCodecList.joinToString(separator = ",")
+            Log.i("media codec", codeclist)
+            val intent = Intent(this, DeviceInfo::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
 
 
 //        ntwbtn.setOnClickListener(){
@@ -89,37 +72,7 @@ class MainActivity : AppCompatActivity(){
 //        }
 //        registerReceiver()
 
-
-
     }
-    private fun screenValue() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
-            val defaultDisplay =
-                DisplayManagerCompat.getInstance(this).getDisplay(Display.DEFAULT_DISPLAY)
-            val displayContext = createDisplayContext(defaultDisplay!!)
-
-            val width = displayContext.resources.displayMetrics.widthPixels
-            val height = displayContext.resources.displayMetrics.heightPixels
-
-            Log.e("tag", "width (ANDOIRD R/ABOVE): $width")
-            Log.e("tag", "height (ANDOIRD R/ABOVE) : $height")
-
-        } else {
-
-            val displayMetrics = DisplayMetrics()
-            @Suppress("DEPRECATION")
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-            val height = displayMetrics.heightPixels
-            val width = displayMetrics.widthPixels
-
-            Log.e("tag", "width (BOTTOM ANDROID R): $width")
-            Log.e("tag", "height (BOTTOM ANDROID R) : $height")
-
-        }
-    }
-
 
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
