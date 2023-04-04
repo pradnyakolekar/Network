@@ -1,17 +1,13 @@
 package com.example.network
 
-import android.content.Context
-import android.content.res.Configuration
 import android.media.MediaDrm
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
-import android.support.v4.hardware.display.DisplayManagerCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Display
 import android.widget.GridView
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -19,7 +15,6 @@ class DeviceInfo : AppCompatActivity() {
 
     private lateinit var idGrid: GridView
     private lateinit var id :String
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_deviceinfo)
@@ -29,6 +24,8 @@ class DeviceInfo : AppCompatActivity() {
         val drmdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
         val codecdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
         var array: ArrayList<String> = ArrayList<String>()
+        var value: String =""
+
         val bundle = intent.extras
         if (bundle != null) {
             id = "${bundle.getString("id")}"
@@ -48,8 +45,16 @@ class DeviceInfo : AppCompatActivity() {
         val y=displayMetrics.ydpi.toInt()
         val refreshRate = windowManager.defaultDisplay.refreshRate.toInt()
         val hdrCapabilities = windowManager.defaultDisplay.hdrCapabilities
+        val phyheight = displayMetrics.heightPixels
+        val phyweight = displayMetrics.widthPixels
         val rotation = windowManager.defaultDisplay.rotation
         val brand = Build.BRAND
+        val alternativerefreshrate = windowManager.defaultDisplay.supportedModes
+
+        for(i in alternativerefreshrate){
+             value += i.physicalWidth.toString() +"p@"+ i.refreshRate.toInt() + "Hz \n"
+             Log.i("pradnya", i.toString())
+        }
         val maxLum=hdrCapabilities.desiredMaxLuminance.toInt()
         val minLum=hdrCapabilities.desiredMinLuminance.toInt()
         val hdr=windowManager.defaultDisplay.isHdr
@@ -72,7 +77,7 @@ class DeviceInfo : AppCompatActivity() {
         }
         //val ratio=(height/width).toString()
         val wideColor=windowManager.defaultDisplay.isWideColorGamut
-        var device=windowManager.defaultDisplay.preferredWideGamutColorSpace
+//        var device=windowManager.defaultDisplay.preferredWideGamutColorSpace
 
         fun gcd(p:Int,q:Int): Int {
             if (q == 0)
@@ -92,21 +97,25 @@ class DeviceInfo : AppCompatActivity() {
                 return "$x:$y"
             }
         }
-        var udh :Boolean = isUhdDevice(height,width)
+        var udh :Boolean = isUhdDevice(phyheight,phyweight)
         var ration :String= ratio(width,height)
 
         dataModelArrayList.add(DataModel("Device Name", brand))
-        dataModelArrayList.add(DataModel("Ratio", "$width X $height"))
+        dataModelArrayList.add(DataModel("Resolution", "$phyweight X $phyheight"))
         dataModelArrayList.add(DataModel("Smallest Width", width.toString()))
+        //dataModelArrayList.add(DataModel("HDR capabilities", hdrCapabilities.toString()))
         dataModelArrayList.add(DataModel("Refresh Rate", "$refreshRate Hz"))
         dataModelArrayList.add(DataModel("4k Support",udh.toString()))
         dataModelArrayList.add(DataModel("Rotation", rotation.toString()))
+        //dataModelArrayList.add(DataModel("Density", density))
+        dataModelArrayList.add(DataModel("Supported HDR",value))
+//        4k, hevc support
         dataModelArrayList.add(DataModel("Luminance", "Max:$maxLum nits\nMin:$minLum nits"))
         dataModelArrayList.add(DataModel("HDR", "$hdr"))
         dataModelArrayList.add(DataModel("Pixels Per Inch", "X: $x ppi\nY: $y ppi"))
         dataModelArrayList.add(DataModel("DPI", "xhdpi: $xpi"))
         dataModelArrayList.add(DataModel("Ratio", ration))
-        dataModelArrayList.add(DataModel("Wide Color Gamut", "Display: $wideColor\nDevice: $device"))
+        //dataModelArrayList.add(DataModel("Wide Color Gamut", "Display: $wideColor\nDevice: $device"))
 
 
         //drm info
@@ -125,9 +134,9 @@ class DeviceInfo : AppCompatActivity() {
         val usageReportingSupport = mediaDrm.getPropertyString("usageReportingSupport")
         val maxNumberOfSessions = mediaDrm.getPropertyString("maxNumberOfSessions")
         val numberOfOpenSessions = mediaDrm.getPropertyString("numberOfOpenSessions")
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            hdcp = mediaDrm.connectedHdcpLevel.toString()
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            hdcp = mediaDrm.connectedHdcpLevel.toString()
+//        }
 
         drmdataModelArrayList.add(DataModel("Vendor", vendor))
         drmdataModelArrayList.add(DataModel("Version", version))
@@ -140,7 +149,7 @@ class DeviceInfo : AppCompatActivity() {
         drmdataModelArrayList.add(DataModel("usageReportingSupport", usageReportingSupport))
         drmdataModelArrayList.add(DataModel("maxNumberOfSessions", maxNumberOfSessions))
         drmdataModelArrayList.add(DataModel("numberOfOpenSessions", numberOfOpenSessions))
-        drmdataModelArrayList.add(DataModel("hdcp", hdcp.toString()))
+        //drmdataModelArrayList.add(DataModel("hdcp", hdcp.toString()))
 
         if (id == "display") {
             val adapter = DisplayAdapter(this, dataModelArrayList)
