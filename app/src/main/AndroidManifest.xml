@@ -28,11 +28,18 @@
             tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".DeviceInfo"
+            android:exported="true"
+            tools:ignore="Instantiatable">
+        </activity>
+        <activity android:name=".CodecInfo"
+            android:exported="true"
+            tools:ignore="Instantiatable">
+        </activity>
+        <activity android:name=".detailedcodec"
             android:exported="true"
             tools:ignore="Instantiatable">
         </activity>

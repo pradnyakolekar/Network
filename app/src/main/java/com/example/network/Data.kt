@@ -10,3 +10,11 @@ class DataModel(var title: String, var desc: String) {
         return desc
     }
 }
+
+data class DataModel1 (
+    var title:String,
+    var desc: String,
+    var hwAcc:String,
+    var swonly:String,
+    var vendor:String
+)

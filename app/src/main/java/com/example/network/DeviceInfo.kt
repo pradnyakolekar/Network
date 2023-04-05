@@ -1,13 +1,16 @@
 package com.example.network
 
+import RecyclerAdapter
+import android.content.Intent
+import android.media.MediaCodecList
 import android.media.MediaDrm
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.GridView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,7 +25,7 @@ class DeviceInfo : AppCompatActivity() {
         idGrid = findViewById(R.id.idGRV)
         val dataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
         val drmdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
-        val codecdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
+
         var array: ArrayList<String> = ArrayList<String>()
         var value: String =""
 
@@ -151,15 +154,17 @@ class DeviceInfo : AppCompatActivity() {
         drmdataModelArrayList.add(DataModel("numberOfOpenSessions", numberOfOpenSessions))
         //drmdataModelArrayList.add(DataModel("hdcp", hdcp.toString()))
 
+
         if (id == "display") {
             val adapter = DisplayAdapter(this, dataModelArrayList)
             idGrid.adapter = adapter
         } else if (id == "drm") {
             val adapter = DisplayAdapter(this, drmdataModelArrayList)
             idGrid.adapter = adapter
-        } else {
-            val adapter = DisplayAdapter(this, drmdataModelArrayList)
-            idGrid.adapter = adapter
         }
+        else{
+
+        }
+
     }
 }
