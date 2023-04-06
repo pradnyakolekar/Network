@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(){
         val btncodec = findViewById<Button>(R.id.codec)
 
         btndisplay.setOnClickListener(){
-            getDeviceResolution()
+            //getDeviceResolution()
             val bundle = Bundle()
             bundle.putString("id", "display")
             val intent = Intent(this, DeviceInfo::class.java)
@@ -96,27 +96,7 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    fun getDeviceResolution(): String {
-        val displayManager = DisplayManagerCompat.getInstance(context)
-        val defaultDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-        val modeCompatSupported = defaultDisplay?.let {
-            DisplayCompat.getSupportedModes(context, it)
-        }
-        var data=""
-        var size=0
-        var is4kSupported = false
-        if (modeCompatSupported != null) {
-            for (modeCompat in modeCompatSupported) {
-                Log.i("DisplaySize" ,"available"+ modeCompat.physicalWidth.toString() +" X " + modeCompat.physicalHeight.toString())
-                if(size < modeCompat.physicalWidth) {
-                    size=modeCompat.physicalWidth
-                    data= modeCompat.physicalWidth.toString() +" X " + modeCompat.physicalHeight.toString()
-                    Log.i("DisplaySize" ,data)
-                }
-            }
-        }
-        return data
-    }
+
 
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
