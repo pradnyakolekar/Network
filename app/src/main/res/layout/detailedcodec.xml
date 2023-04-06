@@ -7,6 +7,36 @@
     android:layout_margin="3dp">
 
     <LinearLayout
+        android:id="@+id/types"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Supported Types"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/supportedtypes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="desc"
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/hw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +44,7 @@
         android:padding="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/ic_background"
-        tools:ignore="MissingClass,MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/types"
         >
 
         <TextView
@@ -93,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="desc"
+            android:text="Google"
             android:textSize="12dp"
             android:textColor="#656464" />
 

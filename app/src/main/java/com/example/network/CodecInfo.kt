@@ -44,7 +44,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked {
     override fun onItemClick(list2: List<DataModel1>, position: Int) {
         val item = list2[position]
         val intent = Intent(this, detailedcodec::class.java)
-        intent.putExtra("name", item.title)
+        intent.putExtra("name", item.desc)
         intent.putExtra("hwacc", item.hwAcc)
         intent.putExtra("swonly", item.swonly)
         intent.putExtra("vendor", item.vendor)

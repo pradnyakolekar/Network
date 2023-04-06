@@ -14,18 +14,19 @@ class detailedcodec: AppCompatActivity() {
 
         val hwacc1: TextView = findViewById(R.id.hwacc)
         val swonly1: TextView = findViewById(R.id.swonly)
-        val vendor1: TextView = findViewById(R.id.vendor)
+        val SupportedTypes1: TextView = findViewById(R.id.supportedtypes)
 
         val extras = intent.extras
         if (extras != null) {
-            val name = extras.getString("name")
+            val SupportedTypes = extras.getString("name")
             val hwacc = extras.getString("hwacc")
             val swonly = extras.getString("swonly")
             val vendor = extras.getString("vendor")
 
+            SupportedTypes1.text = SupportedTypes
             hwacc1.text = hwacc
             swonly1.text = swonly
-            vendor1.text = vendor
+            //vendor1.text = vendor
         }
     }
 }
