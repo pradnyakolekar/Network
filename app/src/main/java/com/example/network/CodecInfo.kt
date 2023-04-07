@@ -1,14 +1,19 @@
 package com.example.network
 
 import RecyclerAdapter
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaCodec
 import android.media.MediaCodecInfo
+import android.media.MediaCodecInfo.CodecCapabilities
+import android.media.MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback
 import android.media.MediaCodecList
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
@@ -29,19 +34,19 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         val audiobtn = findViewById<Button>(R.id.audio)
         audiobtn.setOnClickListener(this)
 
-
         //codec
         var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
         val codeclist=mediaCodecList.joinToString(separator = ",")
         Log.i("media codec", codeclist)
         printLongResponse("codec",codeclist)
         for (i in mediaCodecList) {
+
             //codecdataModelArrayList.add(DataModel( i.name,"click to get more details"))
             val instance = MediaCodecInfo.CodecCapabilities.FEATURE_LowLatency
 
             if (i.supportedTypes.get(0).contains("audio")) {
-                val stor = i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange
-                Log.i("Decoder low lat ", stor.toString())
+                //val stor = i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange
+                //Log.i("Decoder low lat ", stor.toString())
 
                 codecdataModelArrayList1.add(
                     DataModel1(
@@ -49,17 +54,27 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         i.supportedTypes.get(0),
                         i.isHardwareAccelerated.toString(),
                         i.isSoftwareOnly.toString(),
-                        i.isVendor.toString()
+                        i.isVendor.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).maxSupportedInstances.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.maxInputChannelCount.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.minInputChannelCount.toString(),
+                       // i.getCapabilitiesForType(i.supportedTypes.get(0)).profileLevels.toString()
                     )
                 )
-            } else{
+            } else if(i.supportedTypes.get(0).contains("video")){
                 codecdataModelArrayList.add(
                     DataModel1(
                         i.name,
                         i.supportedTypes.get(0),
                         i.isHardwareAccelerated.toString(),
                         i.isSoftwareOnly.toString(),
-                        i.isVendor.toString()
+                        i.isVendor.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).maxSupportedInstances.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.bitrateRange.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedFrameRates.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedPerformancePoints.toString()
+                        //i.getCapabilitiesForType(i.supportedTypes.get(0)).colorFormats.get(0).toString()
                     )
                 )
             }
@@ -78,6 +93,11 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("hwacc", item.hwAcc)
         intent.putExtra("swonly", item.swonly)
         intent.putExtra("vendor", item.vendor)
+        intent.putExtra("supportInstance", item.maxInstance)
+        intent.putExtra("bitRateRange", item.bitrange)
+        intent.putExtra("range", item.range)
+        intent.putExtra("range212", item.range2)
+       // intent.putExtra("feature", item.feature)
         startActivity(intent)
     }
 

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -129,4 +136,164 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/maxinstance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/ven">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Max Supported Instance"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/supportInstance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Google"
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/BitRateRange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/maxinstance">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Bitrate Range"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/bitrange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/BitRateRange">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/changetext"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="de"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/range1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/range01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/range">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/changetext1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text=""
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/range2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/feature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/range01">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/feature1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Change"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/feature2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
