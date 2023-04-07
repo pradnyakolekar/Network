@@ -9,7 +9,7 @@ import com.example.network.DataModel
 import com.example.network.DataModel1
 import com.example.network.R
 
-class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val list: List<DataModel>, private val list2: List<DataModel1>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private val itemClicked: CodecItemClicked,  private val list2: List<DataModel1>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_recycleritem, parent, false)
@@ -18,7 +18,6 @@ class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val lis
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        //val DataModel = list[position]
         val item = list2[position]
 
         holder.title.text = item.title
