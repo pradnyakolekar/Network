@@ -48,12 +48,16 @@ class detailedcodec: AppCompatActivity() {
                     tv1.text = "Max Input Channel"
                     val tv2:TextView = findViewById(R.id.changetext1)
                     tv2.text = "Min Input Channel"
+                    val tv3: TextView = findViewById(R.id.feature1)
+                    tv3.text = "Supported Sample Rate Range"
                 }
                 else if(SupportedTypes.contains("video")){
                     val tv1: TextView = findViewById(R.id.changetext)
                     tv1.text = "Supported Frame Rates"
                     val tv2:TextView = findViewById(R.id.changetext1)
                     tv2.text = "Supported Performance Points"
+                    val tv3: TextView = findViewById(R.id.feature1)
+                    tv3.text = "Supported Width"
                 }
 
             }

@@ -21,5 +21,5 @@ data class DataModel1 (
     var bitrange:String,
     var range:String,
     var range2:String,
-   // var feature:String
+    var feature:String
 )

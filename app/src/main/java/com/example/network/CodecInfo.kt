@@ -8,6 +8,7 @@ import android.media.MediaCodecInfo
 import android.media.MediaCodecInfo.CodecCapabilities
 import android.media.MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback
 import android.media.MediaCodecList
+import android.media.MediaFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -42,7 +43,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         for (i in mediaCodecList) {
 
             //codecdataModelArrayList.add(DataModel( i.name,"click to get more details"))
-            val instance = MediaCodecInfo.CodecCapabilities.FEATURE_LowLatency
+            val instance = CodecCapabilities.FEATURE_LowLatency
 
             if (i.supportedTypes.get(0).contains("audio")) {
                 //val stor = i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange
@@ -59,10 +60,10 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange.toString(),
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.maxInputChannelCount.toString(),
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.minInputChannelCount.toString(),
-                       // i.getCapabilitiesForType(i.supportedTypes.get(0)).profileLevels.toString()
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.supportedSampleRateRanges.toString()
                     )
                 )
-            } else if(i.supportedTypes.get(0).contains("video")){
+            } else {
                 codecdataModelArrayList.add(
                     DataModel1(
                         i.name,
@@ -73,8 +74,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).maxSupportedInstances.toString(),
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.bitrateRange.toString(),
                         i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedFrameRates.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedPerformancePoints.toString()
-                        //i.getCapabilitiesForType(i.supportedTypes.get(0)).colorFormats.get(0).toString()
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedPerformancePoints.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedWidths.toString(),
                     )
                 )
             }
@@ -97,7 +98,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("bitRateRange", item.bitrange)
         intent.putExtra("range", item.range)
         intent.putExtra("range212", item.range2)
-       // intent.putExtra("feature", item.feature)
+        intent.putExtra("feature", item.feature)
         startActivity(intent)
     }
 
@@ -138,3 +139,4 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         }
     }
 }
+

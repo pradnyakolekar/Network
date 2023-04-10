@@ -130,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Google"
+            android:text="Device Vendor"
             android:textSize="12dp"
             android:textColor="#656464" />
 
