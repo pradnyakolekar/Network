@@ -8,7 +8,6 @@ import android.media.MediaCodecInfo
 import android.media.MediaCodecInfo.CodecCapabilities
 import android.media.MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback
 import android.media.MediaCodecList
-import android.media.MediaFormat
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -26,7 +25,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
     val codecdataModelArrayList: ArrayList<DataModel1> = ArrayList<DataModel1>()
     val codecdataModelArrayList1: ArrayList<DataModel1> = ArrayList<DataModel1>()
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_codec)
@@ -37,18 +36,13 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
 
         //codec
         var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
-        val codeclist=mediaCodecList.joinToString(separator = ",")
-        Log.i("media codec", codeclist)
-        printLongResponse("codec",codeclist)
+
         for (i in mediaCodecList) {
 
             //codecdataModelArrayList.add(DataModel( i.name,"click to get more details"))
             val instance = CodecCapabilities.FEATURE_LowLatency
 
             if (i.supportedTypes.get(0).contains("audio")) {
-                //val stor = i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange
-                //Log.i("Decoder low lat ", stor.toString())
-
                 codecdataModelArrayList1.add(
                     DataModel1(
                         i.name,
@@ -119,24 +113,5 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         }
     }
 
-    private fun printLongResponse(tagName: String, str: String?) {
-        try {
-            if (str != null) {
-                val lengthLimit = 4000
-                val loopCount = str.length / lengthLimit
-                val remaining = str.length % lengthLimit
-                for (i in 0 until loopCount) {
-                    Log.d(tagName, "" + str.substring((lengthLimit * i), (lengthLimit * (i + 1))))
-                }
-                if (remaining > 0) {
-                    Log.d(tagName, "" + str.substring(lengthLimit * loopCount, str.length))
-                }
-            } else {
-                Log.d(tagName, "Null Response")
-            }
-        } catch (e: Exception) {
-            Log.e(tagName, "Error while printing long Response: $e")
-        }
-    }
 }
 

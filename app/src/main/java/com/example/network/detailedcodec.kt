@@ -39,7 +39,7 @@ class detailedcodec: AppCompatActivity() {
             supportInstance1.text = supportInstance
             bitRateRange1.text = bitRateRange
             range1.text = range
-            range21.text = range2
+            range21.text = range2?.replace("PerformancePoint","")
             feature1.text = feature
 
             if (SupportedTypes != null) {
@@ -51,7 +51,7 @@ class detailedcodec: AppCompatActivity() {
                     val tv3: TextView = findViewById(R.id.feature1)
                     tv3.text = "Supported Sample Rate Range"
                 }
-                else if(SupportedTypes.contains("video")){
+                else {
                     val tv1: TextView = findViewById(R.id.changetext)
                     tv1.text = "Supported Frame Rates"
                     val tv2:TextView = findViewById(R.id.changetext1)
