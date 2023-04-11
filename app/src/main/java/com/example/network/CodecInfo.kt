@@ -1,24 +1,21 @@
 package com.example.network
 
 import RecyclerAdapter
-import android.annotation.SuppressLint
+import android.accessibilityservice.GestureDescription.StrokeDescription
+import android.annotation.TargetApi
 import android.content.Intent
-import android.media.MediaCodec
 import android.media.MediaCodecInfo
-import android.media.MediaCodecInfo.CodecCapabilities
-import android.media.MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback
 import android.media.MediaCodecList
+import android.media.MediaRecorder.VideoEncoder.*
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 
 class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.OnClickListener {
 
@@ -36,40 +33,37 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
 
         //codec
         var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
-
+        
         for (i in mediaCodecList) {
 
-            //codecdataModelArrayList.add(DataModel( i.name,"click to get more details"))
-            val instance = CodecCapabilities.FEATURE_LowLatency
-
-            if (i.supportedTypes.get(0).contains("audio")) {
+            if (i.supportedTypes[0].contains("audio")) {
                 codecdataModelArrayList1.add(
                     DataModel1(
                         i.name,
-                        i.supportedTypes.get(0),
-                        i.isHardwareAccelerated.toString(),
-                        i.isSoftwareOnly.toString(),
-                        i.isVendor.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).maxSupportedInstances.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.bitrateRange.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.maxInputChannelCount.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.minInputChannelCount.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).audioCapabilities.supportedSampleRateRanges.toString()
+                        i.supportedTypes[0],
+                        isHardwareAccelerated(i).toString(),
+                        isSoftwareOnly(i).toString(),
+                        "Google",
+                        i.getCapabilitiesForType(i.supportedTypes[0]).maxSupportedInstances.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes[0]).audioCapabilities.bitrateRange.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes[0]).audioCapabilities.maxInputChannelCount.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes[0]).audioCapabilities.minInputChannelCount.toString(),
+                        supportedSampleRateRanges(i),
                     )
                 )
             } else {
                 codecdataModelArrayList.add(
                     DataModel1(
                         i.name,
-                        i.supportedTypes.get(0),
-                        i.isHardwareAccelerated.toString(),
-                        i.isSoftwareOnly.toString(),
-                        i.isVendor.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).maxSupportedInstances.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.bitrateRange.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedFrameRates.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedPerformancePoints.toString(),
-                        i.getCapabilitiesForType(i.supportedTypes.get(0)).videoCapabilities.supportedWidths.toString(),
+                        i.supportedTypes[0],
+                        isHardwareAccelerated(i).toString(),
+                        isSoftwareOnly(i).toString(),
+                        "Google",
+                        i.getCapabilitiesForType(i.supportedTypes[0]).maxSupportedInstances.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes[0]).videoCapabilities.bitrateRange.toString(),
+                        i.getCapabilitiesForType(i.supportedTypes[0]).videoCapabilities.supportedFrameRates.toString(),
+                        "i.getCapabilitiesForType(i.supportedTypes[0]).videoCapabilities.supportedPerformancePoints.toString()",
+                        i.getCapabilitiesForType(i.supportedTypes[0]).videoCapabilities.supportedWidths.toString(),
                     )
                 )
             }
@@ -81,8 +75,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         recyclerview.adapter = adapter
     }
 
-    override fun onItemClick(list2: List<DataModel1>, position: Int) {
-        val item = list2[position]
+    override fun onItemClick(list: List<DataModel1>, position: Int) {
+        val item = list[position]
         val intent = Intent(this, detailedcodec::class.java)
         intent.putExtra("name", item.desc)
         intent.putExtra("hwacc", item.hwAcc)
@@ -113,5 +107,47 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         }
     }
 
+    fun isHardwareAccelerated(info: MediaCodecInfo): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            isHardwareAcceleratedQOrHigher(info)
+        } else !isSoftwareOnly(info)
+    }
+
+    @TargetApi(29)
+    private fun isHardwareAcceleratedQOrHigher(codecInfo: MediaCodecInfo): Boolean {
+        return codecInfo.isHardwareAccelerated
+    }
+
+    private val SOFTWARE_IMPLEMENTATION_PREFIXES = arrayOf(
+        "OMX.google.", "OMX.SEC.", "c2.android"
+    )
+    fun isSoftwareOnly(codecInfo: MediaCodecInfo): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return isSoftwareOnlyQOrHigher(codecInfo)
+        }
+        val name = codecInfo.name
+        for (prefix in SOFTWARE_IMPLEMENTATION_PREFIXES) {
+            if (name.startsWith(prefix!!)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    @TargetApi(29)
+    private fun isSoftwareOnlyQOrHigher(codecInfo: MediaCodecInfo): Boolean {
+        return codecInfo.isSoftwareOnly
+    }
+    var value: String = ""
+
+    private fun supportedSampleRateRanges(codecInfo: MediaCodecInfo): String{
+        for (i in codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.supportedSampleRateRanges){
+            value += i
+        }
+        return value
+    }
+
 }
+
+
 
