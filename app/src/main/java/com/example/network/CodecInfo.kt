@@ -9,10 +9,13 @@ import android.media.MediaCodecList
 import android.media.MediaRecorder.VideoEncoder.*
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -33,7 +36,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
 
         //codec
         var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
-        
+
         for (i in mediaCodecList) {
 
             if (i.supportedTypes[0].contains("audio")) {

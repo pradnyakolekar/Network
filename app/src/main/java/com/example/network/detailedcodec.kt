@@ -2,6 +2,8 @@ package com.example.network
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.GridView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 

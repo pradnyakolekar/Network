@@ -36,18 +36,21 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/display"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="display"/>
 
         <Button
             android:id="@+id/drm"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="drm"/>
 
         <Button
             android:id="@+id/codec"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="codec"/>
