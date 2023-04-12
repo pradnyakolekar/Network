@@ -135,6 +135,36 @@
             android:textColor="#656464" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lowlat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/sw">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Low latency"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/lowlatency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Device Vendor"
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/maxinstance"

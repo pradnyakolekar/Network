@@ -32,6 +32,10 @@ android {
 }
 
 dependencies {
+
+    //libraries
+    api project(path: ':codecLibrary')
+
     //library
     api project(path:':deviceLibrary')
     //noinspection GradleCompatible

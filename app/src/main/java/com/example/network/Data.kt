@@ -17,6 +17,7 @@ data class DataModel1 (
     var hwAcc:String,
     var swonly:String,
     var vendor:String,
+    var lowlatency:String,
     var maxInstance:String,
     var bitrange:String,
     var range:String,
