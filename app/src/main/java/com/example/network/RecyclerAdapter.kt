@@ -1,15 +1,13 @@
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.network.DataModel
 import com.example.network.DataModel1
 import com.example.network.R
 
-class RecyclerAdapter(private val itemClicked: CodecItemClicked,  private val list: List<DataModel1>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val list: ArrayList<DataModel1>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_recycleritem, parent, false)

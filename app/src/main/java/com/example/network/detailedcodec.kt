@@ -23,6 +23,9 @@ class detailedcodec: AppCompatActivity() {
         val range1: TextView = findViewById(R.id.range1)
         val range21:TextView = findViewById(R.id.range2)
         val feature1:TextView = findViewById(R.id.feature2)
+        val multiacc: TextView = findViewById(R.id.multiacc)
+        val partial: TextView = findViewById(R.id.partial)
+        val tunneled: TextView = findViewById(R.id.tunneled)
 
         val extras = intent.extras
         if (extras != null) {
@@ -35,6 +38,9 @@ class detailedcodec: AppCompatActivity() {
             val range = extras.getString("range")
             val range2=extras.getString("range212")
             val feature=extras.getString("feature")
+            val multiac=extras.getString("multiaccess")
+            val tunneledF=extras.getString("tunneledframe")
+            val partialF=extras.getString("partailframe")
 
 
             SupportedTypes1.text = SupportedTypes
@@ -46,6 +52,8 @@ class detailedcodec: AppCompatActivity() {
             range1.text = range
             range21.text = range2?.replace("PerformancePoint","")
             feature1.text = feature
+            multiacc.text = multiac
+            tunneled.text = tunneledF
 
             if (SupportedTypes != null) {
                 if(SupportedTypes.contains("audio")){
@@ -62,7 +70,7 @@ class detailedcodec: AppCompatActivity() {
                     val tv2:TextView = findViewById(R.id.changetext1)
                     tv2.text = "Color profiles"
                     val tv3: TextView = findViewById(R.id.feature1)
-                    tv3.text = "Bitrate modes"
+                    tv3.text = "Birate Modes"
                 }
 
             }

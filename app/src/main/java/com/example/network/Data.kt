@@ -22,5 +22,25 @@ data class DataModel1 (
     var bitrange:String,
     var range:String,
     var range2:String,
-    var feature:String
+    var feature:String,
+    var multiaccess:String,
+    var partailframe:String,
+    var tunneledframe:String
+)
+
+data class DataModel2 (
+    var title:String,
+    var desc: String,
+    var hwAcc:String,
+    var swonly:String,
+    var vendor:String,
+    var lowlatency:String,
+    var maxInstance:String,
+    var bitrange:String,
+    var range:String,
+    var range2:String,
+    var feature:String,
+    var multiaccess:String,
+    var partailframe:String,
+    var tunneledframe:String
 )

@@ -143,7 +143,7 @@
         android:padding="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/ic_background"
-        app:layout_constraintTop_toBottomOf="@+id/sw">
+        app:layout_constraintTop_toBottomOf="@+id/ven">
 
         <TextView
             android:layout_width="match_parent"
@@ -160,7 +160,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Device Vendor"
             android:textSize="12dp"
             android:textColor="#656464" />
 
@@ -174,7 +173,7 @@
         android:padding="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/ic_background"
-        app:layout_constraintTop_toBottomOf="@+id/ven">
+        app:layout_constraintTop_toBottomOf="@+id/lowlat">
 
         <TextView
             android:layout_width="match_parent"
@@ -321,6 +320,97 @@
             android:layout_gravity="center"
             android:text=""
             android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/multiAccFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/feature">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Multiple access units"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/multiacc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tunneledpb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/multiAccFrame">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Tunneled playback"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tunneled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="12dp"
+            android:textColor="#656464" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/partialframe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_background"
+        app:layout_constraintTop_toBottomOf="@+id/tunneledpb">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:text="Partial access units per input buffer"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/partial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="12dp"
+            android:text="false"
             android:textColor="#656464" />
 
     </LinearLayout>

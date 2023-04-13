@@ -45,6 +45,9 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.inputChannelCount(i),
                         codecUtils.dynamicTimestamp(i),
                         codecUtils.supportedSampleRateRanges(i),
+                        codecUtils.multipleAccessFrames(i),
+                        codecUtils.tunneledPlayback(i),
+                        codecUtils.partialAUperIB(i)
                     )
                 )
             } else {
@@ -61,7 +64,10 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.checkProfileLevels(i).toString(),
                         codecUtils.getSupportedColorFormats(i.supportedTypes[0]).toString(),
                         //codecUtils.getSupportedBitrateModes(i.name, i.supportedTypes[0]).toString(),
-                        codecUtils.adaptivePlayback(i),
+                        codecUtils.getSupportedBitrateModes(i),
+                        codecUtils.multipleAccessFrames(i),
+                        codecUtils.tunneledPlayback(i),
+                        codecUtils.partialAUperIB(i)
                     )
                 )
             }
@@ -86,6 +92,9 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("range", item.range)
         intent.putExtra("range212", item.range2)
         intent.putExtra("feature", item.feature)
+        intent.putExtra("multiaccess", item.multiaccess)
+        intent.putExtra("tunneledframe", item.tunneledframe)
+        intent.putExtra("partialframe", item.partailframe)
         startActivity(intent)
     }
 

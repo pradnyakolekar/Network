@@ -80,7 +80,7 @@ class codecUtils {
     fun partialAUperIB(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val partial = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
-        return partial.toString()
+        return "false"
     }
 
 
@@ -114,10 +114,10 @@ class codecUtils {
 
     var value: String = ""
     fun supportedSampleRateRanges(codecInfo: MediaCodecInfo): String {
-        for (i in codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.supportedSampleRateRanges) {
-            value += i
-        }
-        return value
+//        for (i in codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.supportedSampleRateRanges) {
+//            value += i
+//        }
+        return "null"
     }
 
     fun sampleRates(codecInfo: MediaCodecInfo): String {
@@ -208,20 +208,19 @@ class codecUtils {
     fun checkProfileLevels(codecInfo: MediaCodecInfo) : String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val levels = capabilities.profileLevels
+        var value1 = ""
         for (level in levels) {
-           // value += (" ${level.profile}/${level.level} \n")
             for (field in CodecProfileLevel::class.java.declaredFields) {
                 if (field.type.toString() == "int") {
                     val name = field.get(CodecProfileLevel()) as Int
                     if (name == level.level ) {
-                        value += (" ${level.profile}/${field.name} \n")
+                        value1 += (" ${level.profile}/${field.name} \n")
                         break
                     }
                 }
             }
         }
-
-        return value
+        return value1
     }
 }
 
