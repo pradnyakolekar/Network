@@ -58,7 +58,7 @@ class detailedcodec: AppCompatActivity() {
                 }
                 else {
                     val tv1: TextView = findViewById(R.id.changetext)
-                    tv1.text = "Supported Frame Rates"
+                    tv1.text = "Profile levels"
                     val tv2:TextView = findViewById(R.id.changetext1)
                     tv2.text = "Color profiles"
                     val tv3: TextView = findViewById(R.id.feature1)

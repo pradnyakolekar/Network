@@ -2,6 +2,7 @@ package com.example.codeclibrary
 
 import android.annotation.TargetApi
 import android.media.MediaCodecInfo
+import android.media.MediaCodecInfo.CodecProfileLevel
 import android.media.MediaCodecInfo.EncoderCapabilities.*
 import android.media.MediaCodecList
 import android.os.Build
@@ -155,6 +156,16 @@ class codecUtils {
         for (info in infos) {
             if (!info.isEncoder && info.supportedTypes.contains(mimeType)) {
                 val formats = info.getCapabilitiesForType(mimeType).colorFormats
+                for (field in MediaCodecInfo.CodecCapabilities::class.java.declaredFields) {
+                    if (field.type.toString() == "int") {
+                        val name = field.get(MediaCodecInfo.CodecCapabilities()) as Int
+
+                        if (name == formats[0] ) {
+                            formats[0] ==name
+                            break
+                        }
+                    }
+                }
                 return formats.asList()
             }
         }
@@ -174,11 +185,6 @@ class codecUtils {
             return "null"
         }
     }
-
-    val COLOR_QCOM_FORMATYVU420PackedSemiPlanar32m4ka = 0x7FA30C01
-    val COLOR_QCOM_FORMATYVU420PackedSemiPlanar16m4ka = 0x7FA30C02
-    val COLOR_QCOM_FORMATYVU420PackedSemiPlanar64x32Tile2m8ka = 0x7FA30C03
-    val COLOR_QCOM_FORMATYUV420PackedSemiPlanar32m = 0x7FA30C04
 
 
     fun adaptivePlayback(codecInfo: MediaCodecInfo): String {
@@ -203,29 +209,19 @@ class codecUtils {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val levels = capabilities.profileLevels
         for (level in levels) {
-                value +=(" ${level.profile}/${level.level} \n")
+           // value += (" ${level.profile}/${level.level} \n")
+            for (field in CodecProfileLevel::class.java.declaredFields) {
+                if (field.type.toString() == "int") {
+                    val name = field.get(CodecProfileLevel()) as Int
+                    if (name == level.level ) {
+                        value += (" ${level.profile}/${field.name} \n")
+                        break
+                    }
+                }
             }
-        return value
+        }
 
-//        return if(codecInfo.name.toLowerCase().contains("encoder")) ({
-//            val decoder = MediaCodec.createDecoderByType(codecInfo.supportedTypes[0])
-//            val capabilities = codecInfo.getCapabilitiesForType(codecInfo.name)
-//            val levels = capabilities.profileLevels
-//            for (level in levels) {
-//                value +=(" ${level.profile}/${level.level} \n")
-//            }
-//            value
-//        }).toString()
-//        else ({
-//            val encoder = MediaCodec.createEncoderByType(codecInfo.supportedTypes[0])
-//            val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-//            val levels = capabilities.profileLevels
-//            println("Supported profile levels:")
-//            for (level in levels) {
-//                value += (" ${level.profile}/${level.level} \n" )
-//            }
-//            value
-//        }).toString()
+        return value
     }
 }
 
