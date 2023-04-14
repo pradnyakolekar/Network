@@ -26,6 +26,7 @@ class detailedcodec: AppCompatActivity() {
         val multiacc: TextView = findViewById(R.id.multiacc)
         val partial: TextView = findViewById(R.id.partial)
         val tunneled: TextView = findViewById(R.id.tunneled)
+        val bitrate1:TextView=findViewById(R.id.bitrateText)
 
         val extras = intent.extras
         if (extras != null) {
@@ -41,6 +42,7 @@ class detailedcodec: AppCompatActivity() {
             val multiac=extras.getString("multiaccess")
             val tunneledF=extras.getString("tunneledframe")
             val partialF=extras.getString("partailframe")
+            val bitrate=extras.getString("bitrateModes")
 
 
             SupportedTypes1.text = SupportedTypes
@@ -54,6 +56,7 @@ class detailedcodec: AppCompatActivity() {
             feature1.text = feature
             multiacc.text = multiac
             tunneled.text = tunneledF
+            bitrate1.text=bitrate
 
             if (SupportedTypes != null) {
                 if(SupportedTypes.contains("audio")){
@@ -63,6 +66,8 @@ class detailedcodec: AppCompatActivity() {
                     tv2.text = "Dynamic timestamp"
                     val tv3: TextView = findViewById(R.id.feature1)
                     tv3.text = "Sample rates"
+                    val tv4: TextView = findViewById(R.id.bitrateTitle)
+                    tv4.text = "Supported Bitrate Modes"
                 }
                 else {
                     val tv1: TextView = findViewById(R.id.changetext)
@@ -71,6 +76,8 @@ class detailedcodec: AppCompatActivity() {
                     tv2.text = "Color profiles"
                     val tv3: TextView = findViewById(R.id.feature1)
                     tv3.text = "Birate Modes"
+                    val tv4: TextView = findViewById(R.id.bitrateTitle)
+                    tv4.text = "Max Resolution"
                 }
 
             }

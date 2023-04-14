@@ -2,6 +2,7 @@ package com.example.devicelibrary
 
 import android.content.Context
 import android.os.Build
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Display
 import androidx.core.hardware.display.DisplayManagerCompat
@@ -22,7 +23,7 @@ class DeviceUtils(context: Context) {
     val hdrCapabilities = defaultDisplay?.hdrCapabilities
     val hdr = defaultDisplay?.isHdr
     val hdrType = hdrCapabilities?.supportedHdrTypes
-
+    var array1: ArrayList<String> = ArrayList<String>()
     fun xppi(): Int {
         return displayMetrics.xdpi.toInt()
     }
@@ -132,11 +133,31 @@ class DeviceUtils(context: Context) {
         return data
     }
 
-    fun isUhdDevice(): Boolean {
+    fun isUhdDevice(): String {
+        var display=""
+        var device=""
+        val displayMetrics = DisplayMetrics()
+        defaultDisplay?.getMetrics(displayMetrics)
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
+        val density = displayMetrics.densityDpi
+        val diagonalPixels = Math.sqrt(Math.pow(width.toDouble(), 2.0) + Math.pow(height.toDouble(), 2.0))
+        val screenSize = diagonalPixels / (density.toDouble() / DisplayMetrics.DENSITY_DEFAULT)
         if (ratioHeigth >= 2160 && ratioWidth >= 3840) {
-            return true
+            display= "Display: True"
         }
-        return false
+        else{
+            display= "Display: False"
+        }
+
+        if (screenSize >= 27.0) {
+            device= "Device: True"
+        }
+        else{
+            device= "Device: False"
+        }
+        return "$display\n$device"
+
     }
 
     fun smallestWidth(): Int {
@@ -151,4 +172,34 @@ class DeviceUtils(context: Context) {
         return displayMetrics.densityDpi
     }
 
+    fun hdr(): String {
+
+        if (hdr?.equals(true)!!) {
+
+            for (i in hdrType!!) {
+                Log.i("HDR Type", i.toString())
+                if (i.equals(1)) {
+                    array1.add("HDR DOLBY VISION\n")
+                }
+                if (i.equals(2)) {
+                    array1.add("HDR 10\n")
+                }
+                if (i.equals(3)) {
+                    array1.add("HDR HLG\n")
+                }
+                if (i.equals(4)) {
+                    array1.add("HDR 10 PLUS")
+                }
+
+            }
+        } else if (hdr!!.equals(false)) {
+            array1.add("Not Supported")
+
+        }
+        for (i in array1) {
+            value1 += i
+            Log.i("hdr values", i.toString())
+        }
+        return value1
+    }
 }

@@ -25,7 +25,8 @@ data class DataModel1 (
     var feature:String,
     var multiaccess:String,
     var partailframe:String,
-    var tunneledframe:String
+    var tunneledframe:String,
+    var bitrateModes:String
 )
 
 data class DataModel2 (

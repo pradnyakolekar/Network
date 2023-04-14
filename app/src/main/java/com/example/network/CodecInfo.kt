@@ -18,7 +18,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
 
     private val codecdataModelArrayList: ArrayList<DataModel1> = ArrayList<DataModel1>()
     private val codecdataModelArrayList1: ArrayList<DataModel1> = ArrayList<DataModel1>()
-    private val codecUtils = codecUtils()
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +29,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         val audiobtn = findViewById<Button>(R.id.audio)
         audiobtn.setOnClickListener(this)
 
+         val codecUtils = codecUtils(applicationContext)
         //codec
         for (i in codecUtils.mediaCodecList) {
             if (codecUtils.supportedTypes(i).contains("audio")) {
@@ -47,7 +48,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.supportedSampleRateRanges(i),
                         codecUtils.multipleAccessFrames(i),
                         codecUtils.tunneledPlayback(i),
-                        codecUtils.partialAUperIB(i)
+                        codecUtils.partialAUperIB(i),
+                        codecUtils.getSupportedBitrateModes(i)
                     )
                 )
             } else {
@@ -67,7 +69,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.getSupportedBitrateModes(i),
                         codecUtils.multipleAccessFrames(i),
                         codecUtils.tunneledPlayback(i),
-                        codecUtils.partialAUperIB(i)
+                        codecUtils.partialAUperIB(i),
+                        codecUtils.frameRatePerResolution(i)
                     )
                 )
             }
@@ -95,6 +98,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("multiaccess", item.multiaccess)
         intent.putExtra("tunneledframe", item.tunneledframe)
         intent.putExtra("partialframe", item.partailframe)
+        intent.putExtra("bitrateModes", item.bitrateModes)
         startActivity(intent)
     }
 

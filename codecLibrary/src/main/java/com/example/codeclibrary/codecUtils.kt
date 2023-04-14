@@ -1,15 +1,18 @@
 package com.example.codeclibrary
 
 import android.annotation.TargetApi
+import android.content.Context
 import android.media.MediaCodecInfo
 import android.media.MediaCodecInfo.CodecProfileLevel
 import android.media.MediaCodecInfo.EncoderCapabilities.*
 import android.media.MediaCodecList
 import android.os.Build
 
-class codecUtils {
+class codecUtils(context: Context) {
 
     var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
+    var array1: ArrayList<String> = ArrayList<String>()
+    var value1: String = ""
 
     fun name(codecInfo: MediaCodecInfo): String {
         return codecInfo.name
@@ -79,7 +82,8 @@ class codecUtils {
 
     fun partialAUperIB(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        val partial = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
+        val partial =
+            capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
         return "false"
     }
 
@@ -87,8 +91,10 @@ class codecUtils {
 //audio
 
     fun bitrateRange(codecInfo: MediaCodecInfo): String {
-    var lower = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.lower
-    var upper = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.upper
+        var lower =
+            codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.lower
+        var upper =
+            codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.upper
         lower /= 1000
         upper /= 1000
 //    when {
@@ -97,7 +103,7 @@ class codecUtils {
 //        maxBitrate < 1000000000 -> ("${maxBitrate / 1000000} Mbps")
 //        else -> ("${maxBitrate / 1000000000} Gbps")
 //    }
-    return "$lower Kbps - $upper Kbps"
+        return "$lower Kbps - $upper Kbps"
     }
 
     fun inputChannelCount(codecInfo: MediaCodecInfo): String {
@@ -160,8 +166,8 @@ class codecUtils {
                     if (field.type.toString() == "int") {
                         val name = field.get(MediaCodecInfo.CodecCapabilities()) as Int
 
-                        if (name == formats[0] ) {
-                            formats[0] ==name
+                        if (name == formats[0]) {
+                            formats[0] == name
                             break
                         }
                     }
@@ -221,6 +227,84 @@ class codecUtils {
             }
         }
         return value1
+    }
+
+    fun maxResolution(codecInfo: MediaCodecInfo): String {
+        var maxReso = ""
+        val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
+        val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
+        for (codecInfo in codecList.codecInfos) {
+            maxReso = codecCapabilities.videoCapabilities.supportedWidths.upper.toString()
+                .let { maxWidth ->
+                    codecCapabilities.videoCapabilities.supportedHeights.upper.toString()
+                        .let { maxHeight ->
+                            "$maxWidth x $maxHeight"
+                        }
+                }
+        }
+        return maxReso
+    }
+
+    val displayMetrics = context.resources.displayMetrics
+    fun frameRatePerResolution(codecInfo: MediaCodecInfo): String {
+
+        val height = displayMetrics.heightPixels
+        val width = displayMetrics.widthPixels
+        val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
+        val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
+        var maxFrameRate = ""
+
+        for (codecInfo in codecList.codecInfos) {
+            if (codecCapabilities.videoCapabilities.isSizeSupported(width, height)) {
+                var maxFrameRateLow =
+                    (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
+                        width,
+                        height
+                    ).lower).toInt()
+                var maxFrameRateHigh =
+                    (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
+                        width,
+                        height
+                    ).upper).toInt()
+
+                maxFrameRate = "$maxFrameRateLow-$maxFrameRateHigh fps"
+            }
+        }
+        return maxFrameRate
+
+    }
+
+    fun maxFrameRatePerResolution(codecInfo: MediaCodecInfo): String {
+        val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
+        var maxFrameRate = ""
+        var result=""
+// Define the resolutions
+        val resolutions = listOf(
+            Pair(144, 256),
+            Pair(240, 426),
+            Pair(360, 640),
+            Pair(480, 854),
+            Pair(720, 1280),
+            Pair(1080, 1920),
+            Pair(1440, 2560),
+            Pair(2160, 3840),
+            Pair(4320, 7680)
+        )
+
+// resolutions list will now contain a list of pairs representing the supported resolutions
+
+// Get the max frame rate for each resolution
+        for (resolution in resolutions) {
+            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
+                val maxFrameRate = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second).upper
+                        array1.add ("${resolution.first}p: ${maxFrameRate.toInt()} fps\n")
+
+            }
+        }
+        for(i in array1){
+            result+=i
+        }
+        return result
     }
 }
 

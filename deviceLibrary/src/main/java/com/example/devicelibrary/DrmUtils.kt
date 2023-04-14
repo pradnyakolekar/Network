@@ -1,8 +1,10 @@
 package com.example.devicelibrary
 
+import android.app.ActivityManager
 import android.content.Context
 import android.media.MediaDrm
-import java.util.*
+import android.os.Build
+
 
 class DrmUtils(mediaDrm:MediaDrm) {
 
@@ -53,5 +55,20 @@ class DrmUtils(mediaDrm:MediaDrm) {
 
     fun numberOfOpenSessions(): String {
         return mediaDrm.getPropertyString("numberOfOpenSessions")
+    }
+    fun chipset(): String {
+        val chip=Build.HARDWARE
+        return chip
+    }
+
+    fun ramInfo(context: Context): String {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val memoryInfo = ActivityManager.MemoryInfo()
+        activityManager.getMemoryInfo(memoryInfo)
+        val totalRamBytes = memoryInfo.totalMem
+        val totalRam = String.format("%.2f GB", totalRamBytes.toDouble() / (1024 * 1024 * 1024))
+        val availableRamBytes = memoryInfo.availMem
+        val availableRam = String.format("%.2f GB", availableRamBytes.toDouble() / (1024 * 1024 * 1024))
+        return "Total Ram: $totalRam \nAvailable Ram: $availableRam "
     }
 }
