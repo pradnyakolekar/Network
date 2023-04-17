@@ -66,7 +66,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.checkProfileLevels(i).toString(),
                         codecUtils.getSupportedColorFormats(i.supportedTypes[0]).toString(),
                         //codecUtils.getSupportedBitrateModes(i.name, i.supportedTypes[0]).toString(),
-                        codecUtils.getSupportedBitrateModes(i),
+                        codecUtils.isHDReditsupports(i),
                         codecUtils.multipleAccessFrames(i),
                         codecUtils.tunneledPlayback(i),
                         codecUtils.partialAUperIB(i),

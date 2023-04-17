@@ -82,8 +82,7 @@ class codecUtils(context: Context) {
 
     fun partialAUperIB(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        val partial =
-            capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
+        val partial = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
         return "false"
     }
 
@@ -120,10 +119,10 @@ class codecUtils(context: Context) {
 
     var value: String = ""
     fun supportedSampleRateRanges(codecInfo: MediaCodecInfo): String {
-//        for (i in codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.supportedSampleRateRanges) {
-//            value += i
-//        }
-        return "null"
+        for (i in codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.supportedSampleRateRanges) {
+            value += i
+        }
+        return value
     }
 
     fun sampleRates(codecInfo: MediaCodecInfo): String {
@@ -148,34 +147,37 @@ class codecUtils(context: Context) {
 
     @TargetApi(29)
     fun supportedPerformancePoints(codecInfo: MediaCodecInfo): String {
-        //return codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).videoCapabilities.supportedPerformancePoints.toString()
-        return "null"
+        return codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).videoCapabilities.supportedPerformancePoints.toString()
     }
 
+    //error
     fun supportedWidths(codecInfo: MediaCodecInfo): String {
         return codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).videoCapabilities.supportedWidths.toString()
     }
 
-    fun getSupportedColorFormats(mimeType: String): List<Int> {
+
+    fun getSupportedColorFormats(mimeType: String): String {
         val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
         val infos = codecList.getCodecInfos()
+        var value1 = ""
         for (info in infos) {
             if (!info.isEncoder && info.supportedTypes.contains(mimeType)) {
                 val formats = info.getCapabilitiesForType(mimeType).colorFormats
-                for (field in MediaCodecInfo.CodecCapabilities::class.java.declaredFields) {
-                    if (field.type.toString() == "int") {
-                        val name = field.get(MediaCodecInfo.CodecCapabilities()) as Int
-
-                        if (name == formats[0]) {
-                            formats[0] == name
-                            break
+                for (format in formats) {
+                    for (field in MediaCodecInfo.CodecCapabilities::class.java.declaredFields) {
+                        if (field.type.toString() == "int") {
+                            val name = field.get(MediaCodecInfo.CodecCapabilities()) as Int
+                            if (name == format) {
+                                 value1 += "${field.name} (${format}) \n"
+                                break
+                            }
                         }
                     }
                 }
-                return formats.asList()
+                return value1
             }
         }
-        return emptyList()
+        return "null"
     }
 
     fun getSupportedBitrateModes(codecInfo: MediaCodecInfo): String {
@@ -189,6 +191,17 @@ class codecUtils(context: Context) {
             return value
         } else {
             return "null"
+        }
+    }
+
+    //need to verify
+    fun isHDReditsupports(codecInfo: MediaCodecInfo): String{
+        val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
+        val profileLevels = capabilities.profileLevels
+        if (profileLevels.any { it.profile == MediaCodecInfo.CodecProfileLevel.AVCProfileHigh && it.level >= MediaCodecInfo.CodecProfileLevel.AVCLevel31 }) {
+            return "true"
+        } else {
+            return "false"
         }
     }
 
@@ -216,17 +229,33 @@ class codecUtils(context: Context) {
         val levels = capabilities.profileLevels
         var value1 = ""
         for (level in levels) {
-            for (field in CodecProfileLevel::class.java.declaredFields) {
-                if (field.type.toString() == "int") {
-                    val name = field.get(CodecProfileLevel()) as Int
-                    if (name == level.level ) {
-                        value1 += (" ${level.profile}/${field.name} \n")
-                        break
-                    }
+            value1 += "${fieldS(level.profile)}: ${fieldS(level.level)} \n"
+        }
+        return value1
+    }
+
+    //extra
+    fun conversion(int: Int) : String{
+        return when {
+            int < 1000  -> ("$int bps")
+            int < 1000000 -> ("${int / 1000} kbps")
+            int < 1000000000 -> ("${int / 1000000} Mbps")
+            else -> ("${int / 1000000000} Gbps")
+        }
+    }
+
+    fun fieldS(int: Int): String{
+        var value = ""
+        for (field in CodecProfileLevel::class.java.declaredFields) {
+            if (field.type.toString() == "int") {
+                val name = field.get(CodecProfileLevel()) as Int
+                if( name == int){
+                    value = field.name
+                    break
                 }
             }
         }
-        return value1
+        return value
     }
 
     fun maxResolution(codecInfo: MediaCodecInfo): String {
@@ -297,7 +326,7 @@ class codecUtils(context: Context) {
         for (resolution in resolutions) {
             if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
                 val maxFrameRate = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second).upper
-                        array1.add ("${resolution.first}p: ${maxFrameRate.toInt()} fps\n")
+                array1.add ("${resolution.first}p: ${maxFrameRate.toInt()} fps\n")
 
             }
         }

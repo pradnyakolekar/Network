@@ -60,6 +60,8 @@ class detailedcodec: AppCompatActivity() {
 
             if (SupportedTypes != null) {
                 if(SupportedTypes.contains("audio")){
+                    val tv0: TextView = findViewById(R.id.bitrate)
+                    tv0.text = "Bitrate Range"
                     val tv1: TextView = findViewById(R.id.changetext)
                     tv1.text = "Input channels"
                     val tv2:TextView = findViewById(R.id.changetext1)
@@ -70,6 +72,8 @@ class detailedcodec: AppCompatActivity() {
                     tv4.text = "Supported Bitrate Modes"
                 }
                 else {
+                    val tv0: TextView = findViewById(R.id.bitrate)
+                    tv0.text = "Max Bitrate"
                     val tv1: TextView = findViewById(R.id.changetext)
                     tv1.text = "Profile levels"
                     val tv2:TextView = findViewById(R.id.changetext1)
