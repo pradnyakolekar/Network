@@ -1,13 +1,12 @@
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.network.DataModel2
+import com.example.network.DataModel
 import com.example.network.R
 
-class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val list: ArrayList<DataModel2>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class DetailAdapter( private val list: List<DataModel>) : RecyclerView.Adapter<DetailAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_recycleritem, parent, false)
@@ -18,12 +17,8 @@ class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val lis
 
         val item = list[position]
 
-        holder.title.text = item.title
-        holder.desc.text = item.desc
-
-        holder.layout.setOnClickListener{
-            itemClicked.onItemClick(list, position)
-        }
+        holder.title.setText(list.get(position).gettitle())
+        holder.desc.setText(list.get(position).getdesc())
 
     }
 
@@ -31,15 +26,11 @@ class RecyclerAdapter(private val itemClicked: CodecItemClicked, private val lis
         return list.size
     }
 
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val title: TextView = itemView.findViewById(R.id.title)
         val desc: TextView = itemView.findViewById(R.id.desc)
-        var layout : LinearLayout = itemView.findViewById(R.id.itemlayout)
+
     }
 
-    interface CodecItemClicked {
-        fun onItemClick(list: List<DataModel2>, position: Int){
-        }
-    }
 }
 

@@ -1,32 +1,20 @@
 package com.example.network
 
+import DetailAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.GridView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class detailedcodec: AppCompatActivity() {
+
+    private val detaileddata: ArrayList<DataModel> = ArrayList<DataModel>()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.detailedcodec)
-
-        val hwacc1: TextView = findViewById(R.id.hwacc)
-        val swonly1: TextView = findViewById(R.id.swonly)
-        val lowlantency:TextView = findViewById(R.id.lowlatency)
-        val SupportedTypes1: TextView = findViewById(R.id.supportedtypes)
-        val supportInstance1: TextView = findViewById(R.id.supportInstance)
-        val bitRateRange1: TextView = findViewById(R.id.bitrange)
-        val range1: TextView = findViewById(R.id.range1)
-        val range21:TextView = findViewById(R.id.range2)
-        val feature1:TextView = findViewById(R.id.feature2)
-        val multiacc: TextView = findViewById(R.id.multiacc)
-        val partial: TextView = findViewById(R.id.partial)
-        val tunneled: TextView = findViewById(R.id.tunneled)
-        val bitrate1:TextView=findViewById(R.id.bitrateText)
+        setContentView(R.layout.layout_detail)
 
         val extras = intent.extras
         if (extras != null) {
@@ -36,55 +24,63 @@ class detailedcodec: AppCompatActivity() {
             val lowlat = extras.getString("lowlatency")
             val supportInstance = extras.getString("supportInstance")
             val bitRateRange = extras.getString("bitRateRange")
-            val range = extras.getString("range")
-            val range2=extras.getString("range212")
-            val feature=extras.getString("feature")
-            val multiac=extras.getString("multiaccess")
-            val tunneledF=extras.getString("tunneledframe")
-            val partialF=extras.getString("partailframe")
-            val bitrate=extras.getString("bitrateModes")
-
-
-            SupportedTypes1.text = SupportedTypes
-            hwacc1.text = hwacc
-            swonly1.text = swonly
-            lowlantency.text = lowlat
-            supportInstance1.text = supportInstance
-            bitRateRange1.text = bitRateRange
-            range1.text = range
-            range21.text = range2?.replace("PerformancePoint","")
-            feature1.text = feature
-            multiacc.text = multiac
-            tunneled.text = tunneledF
-            bitrate1.text=bitrate
+            val channelCount = extras.getString("channelCount")
+            val profile = extras.getString("profile")
+            val color = extras.getString("color")
+            val dynamic = extras.getString("dynamic")
+            val multiac = extras.getString("multiaccess")
+            val tunneledF = extras.getString("tunneledframe")
+            val maxReso = extras.getString("maxReso")
+            val maxframe = extras.getString("maxframe")
+            val frame = extras.getString("frame")
+            val partialFrame = extras.getString("partailFrame")
+            val bitrateModes = extras.getString("bitrateModes")
+            val isHdr = extras.getString("isHDR")
+            val adaptivePlayback = extras.getString("adaptivePlayback")
+            val securePlayback = extras.getString("securePlayback")
+            val infraRefresh = extras.getString("infraRefresh")
 
             if (SupportedTypes != null) {
-                if(SupportedTypes.contains("audio")){
-                    val tv0: TextView = findViewById(R.id.bitrate)
-                    tv0.text = "Bitrate Range"
-                    val tv1: TextView = findViewById(R.id.changetext)
-                    tv1.text = "Input channels"
-                    val tv2:TextView = findViewById(R.id.changetext1)
-                    tv2.text = "Dynamic timestamp"
-                    val tv3: TextView = findViewById(R.id.feature1)
-                    tv3.text = "Sample rates"
-                    val tv4: TextView = findViewById(R.id.bitrateTitle)
-                    tv4.text = "Supported Bitrate Modes"
+                if (SupportedTypes.contains("audio")) {
+                    detaileddata.add(DataModel("Supported Types", SupportedTypes))
+                    detaileddata.add(DataModel("Hardware Acceleration", hwacc.toString()))
+                    detaileddata.add(DataModel("Software Only", swonly.toString()))
+                    detaileddata.add(DataModel("Low Latency", lowlat.toString()))
+                    detaileddata.add(DataModel("Max Supported Instance", supportInstance.toString()))
+                    detaileddata.add(DataModel("Bitrate Range", bitRateRange.toString()))
+                    detaileddata.add(DataModel("Input Channel Count", channelCount.toString()))
+                    detaileddata.add(DataModel("Dynamic Timestamp", dynamic.toString()))
+                    detaileddata.add(DataModel("Multiple Access Frames", multiac.toString()))
+                    detaileddata.add(DataModel("Tunneled playback", tunneledF.toString()))
+                    detaileddata.add(DataModel("Partial Access Units per Input Buffer", partialFrame.toString()))
+                } else {
+                    detaileddata.add(DataModel("Supported Types", SupportedTypes))
+                    detaileddata.add(DataModel("Hardware Acceleration", hwacc.toString()))
+                    detaileddata.add(DataModel("Software Only", swonly.toString()))
+                    detaileddata.add(DataModel("Low Latency", lowlat.toString()))
+                    detaileddata.add(DataModel("Max Supported Instance", supportInstance.toString()))
+                    detaileddata.add(DataModel("Max Bitrate", bitRateRange.toString()))
+                    detaileddata.add(DataModel("Infra Refresh", infraRefresh.toString()))
+                    detaileddata.add(DataModel("Max Resolution", maxReso.toString()))
+                    detaileddata.add(DataModel("Max Frame Rate per resoltuion", maxframe.toString()))
+                    detaileddata.add(DataModel("Frame Rate", frame.toString()))
+                    detaileddata.add(DataModel("Profile Levels", profile.toString()))
+                    detaileddata.add(DataModel("Color Formats", color.toString()))
+                    detaileddata.add(DataModel("Dynamic Timestamp", dynamic.toString()))
+                    detaileddata.add(DataModel("Supported Bitrate Modes", bitrateModes.toString()))
+                    detaileddata.add(DataModel("HDR Editing", isHdr.toString()))
+                    detaileddata.add(DataModel("Adaptive Playback", adaptivePlayback.toString()))
+                    detaileddata.add(DataModel("Secure Playback", securePlayback.toString()))
+                    detaileddata.add(DataModel("Multiple Access Frames", multiac.toString()))
+                    detaileddata.add(DataModel("Tunneled playback", tunneledF.toString()))
+                    detaileddata.add(DataModel("Partial Access Units per Input Buffer", partialFrame.toString()))
                 }
-                else {
-                    val tv0: TextView = findViewById(R.id.bitrate)
-                    tv0.text = "Max Bitrate"
-                    val tv1: TextView = findViewById(R.id.changetext)
-                    tv1.text = "Profile levels"
-                    val tv2:TextView = findViewById(R.id.changetext1)
-                    tv2.text = "Color profiles"
-                    val tv3: TextView = findViewById(R.id.feature1)
-                    tv3.text = "Birate Modes"
-                    val tv4: TextView = findViewById(R.id.bitrateTitle)
-                    tv4.text = "Max Resolution"
-                }
-
             }
-        }
+            }
+
+        val recyclerview = findViewById<RecyclerView>(R.id.rvdetail)
+        recyclerview.layoutManager = LinearLayoutManager(this)
+        val adapter = DetailAdapter(detaileddata)
+        recyclerview.adapter = adapter
     }
 }

@@ -31,22 +31,11 @@ class DeviceInfo : AppCompatActivity() {
             id = "${bundle.getString("id")}"
         }
 
-
         val device = DeviceUtils(applicationContext)
         val mediaDrm:MediaDrm = MediaDrm(C.WIDEVINE_UUID)
         val drm=DrmUtils(mediaDrm)
         val dataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
         val drmdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
-        var array: ArrayList<String> = ArrayList<String>()
-
-
-
-        // Pass the WindowManager object to another class
-
-
-        //val refreshRate =windowManager.defaultDisplay.refreshRate.toInt()
-
-
 
         //device info
         dataModelArrayList.add(DataModel("Device Name", device.deviceName()))

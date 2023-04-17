@@ -46,32 +46,6 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    fun getSupportedVideoCodecs(): List<String> {
-        val codecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
-        val codecInfos = codecList.codecInfos
-        val supportedCodecs = mutableListOf<String>()
-
-        for (codecInfo in codecInfos) {
-            if (codecInfo.isEncoder) {
-                continue
-            }
-
-            val types = codecInfo.supportedTypes
-            for (type in types) {
-                if (type.startsWith("video/")) {
-                    val format = MediaFormat.createVideoFormat(type, 640, 480) // set some arbitrary resolution
-                    if (codecInfo.getCapabilitiesForType(type).isFormatSupported(format)) {
-                        supportedCodecs.add(codecInfo.name)
-                        break
-                    }
-                }
-            }
-        }
-
-        return supportedCodecs
-    }
-
-
     @SuppressLint("HardwareIds")
     private fun getSystemDetail() : String{
         return "Brand: ${Build.BRAND} \n" +

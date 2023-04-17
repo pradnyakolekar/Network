@@ -16,9 +16,8 @@ import com.example.codeclibrary.codecUtils
 
 class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.OnClickListener {
 
-    private val codecdataModelArrayList: ArrayList<DataModel1> = ArrayList<DataModel1>()
-    private val codecdataModelArrayList1: ArrayList<DataModel1> = ArrayList<DataModel1>()
-
+    private val codecdataModelArrayList: ArrayList<DataModel2> = ArrayList<DataModel2>()
+    private val codecdataModelArrayList1: ArrayList<DataModel2> = ArrayList<DataModel2>()
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +32,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         //codec
         for (i in codecUtils.mediaCodecList) {
             if (codecUtils.supportedTypes(i).contains("audio")) {
-                codecdataModelArrayList1.add(
-                    DataModel1(
+                codecdataModelArrayList.add(
+                    DataModel2(
                         codecUtils.name(i),
                         codecUtils.supportedTypes(i),
                         codecUtils.isHardwareAccelerated(i).toString(),
@@ -44,17 +43,25 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.maxSupportedInstances(i),
                         codecUtils.bitrateRange(i),
                         codecUtils.inputChannelCount(i),
+                        null,
+                        null,
                         codecUtils.dynamicTimestamp(i),
-                        codecUtils.supportedSampleRateRanges(i),
                         codecUtils.multipleAccessFrames(i),
-                        codecUtils.tunneledPlayback(i),
                         codecUtils.partialAccessUnitperIB(i),
-                        codecUtils.getSupportedBitrateModes(i)
+                        codecUtils.tunneledPlayback(i),
+                        null,
+                        null,
+                        null,
+                        codecUtils.getSupportedBitrateModes(i),
+                        null,
+                        null,
+                        null,
+                        null,
                     )
                 )
             } else {
-                codecdataModelArrayList.add(
-                    DataModel1(
+                codecdataModelArrayList1.add(
+                    DataModel2(
                         codecUtils.name(i),
                         codecUtils.supportedTypes(i),
                         codecUtils.isHardwareAccelerated(i).toString(),
@@ -63,14 +70,21 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.lowLantency(i),
                         codecUtils.maxSupportedInstances(i),
                         codecUtils.maxBitrate(i),
-                        codecUtils.checkProfileLevels(i).toString(),
-                        codecUtils.getSupportedColorFormats(i.supportedTypes[0]).toString(),
-                        //codecUtils.getSupportedBitrateModes(i.name, i.supportedTypes[0]).toString(),
-                        codecUtils.isHDReditsupports(i),
+                        null,
+                        codecUtils.checkProfileLevels(i),
+                        codecUtils.getSupportedColorFormats(i.supportedTypes[0]),
+                        codecUtils.dynamicTimestamp(i),
                         codecUtils.multipleAccessFrames(i),
-                        codecUtils.tunneledPlayback(i),
                         codecUtils.partialAccessUnitperIB(i),
-                        codecUtils.frameRatePerResolution(i)
+                        codecUtils.tunneledPlayback(i),
+                        codecUtils.maxResolution(i),
+                        codecUtils.frameRatePerResolution(i),
+                        codecUtils.maxFrameRatePerResolution(i),
+                        codecUtils.getSupportedBitrateModes(i),
+                        codecUtils.isHDReditsupports(i),
+                        codecUtils.adaptivePlayback(i),
+                        codecUtils.securePlayback(i),
+                        codecUtils.infraRefresh(i)
                     )
                 )
             }
@@ -78,11 +92,11 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
 
         val recyclerview = findViewById<RecyclerView>(R.id.rvcodec)
         recyclerview.layoutManager = LinearLayoutManager(this)
-        val adapter = RecyclerAdapter(this,codecdataModelArrayList)
+        val adapter = RecyclerAdapter(this,codecdataModelArrayList1)
         recyclerview.adapter = adapter
     }
 
-    override fun onItemClick(list: List<DataModel1>, position: Int) {
+    override fun onItemClick(list: List<DataModel2>, position: Int) {
         val item = list[position]
         val intent = Intent(this, detailedcodec::class.java)
         intent.putExtra("name", item.desc)
@@ -92,13 +106,21 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("lowlatency", item.lowlatency)
         intent.putExtra("supportInstance", item.maxInstance)
         intent.putExtra("bitRateRange", item.bitrange)
-        intent.putExtra("range", item.range)
-        intent.putExtra("range212", item.range2)
-        intent.putExtra("feature", item.feature)
+        intent.putExtra("channelCount", item.channelcount)
+        intent.putExtra("profile", item.profile)
+        intent.putExtra("color", item.color)
+        intent.putExtra("dynamic", item.dynamic)
         intent.putExtra("multiaccess", item.multiaccess)
         intent.putExtra("tunneledframe", item.tunneledframe)
-        intent.putExtra("partialframe", item.partailframe)
-        intent.putExtra("bitrateModes", item.bitrateModes)
+        intent.putExtra("maxReso", item.maxReso)
+        intent.putExtra("maxframe", item.maxframe)
+        intent.putExtra("frame", item.frame)
+        intent.putExtra("bitratemodes", item.bitratemodes)
+        intent.putExtra("isHDR", item.isHDR)
+        intent.putExtra("adaptivePlayback", item.adaptivePlayback)
+        intent.putExtra("securePlayback", item.securePlayback)
+        intent.putExtra("infraRefresh", item.infraRefresh)
+        intent.putExtra("partialFrame", item.partailframe)
         startActivity(intent)
     }
 
@@ -107,13 +129,13 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
             R.id.video -> {
                 val recyclerview = findViewById<RecyclerView>(R.id.rvcodec)
                 recyclerview.layoutManager = LinearLayoutManager(this)
-                val adapter = RecyclerAdapter(this,codecdataModelArrayList)
+                val adapter = RecyclerAdapter(this,codecdataModelArrayList1)
                 recyclerview.adapter = adapter
             }
             R.id.audio -> {
                 val recyclerview = findViewById<RecyclerView>(R.id.rvcodec)
                 recyclerview.layoutManager = LinearLayoutManager(this)
-                val adapter = RecyclerAdapter(this,codecdataModelArrayList1)
+                val adapter = RecyclerAdapter(this,codecdataModelArrayList)
                 recyclerview.adapter = adapter
             }
         }

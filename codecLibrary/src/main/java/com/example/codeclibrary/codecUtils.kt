@@ -93,7 +93,7 @@ class codecUtils(context: Context) {
             codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.lower
         var upper =
             codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.upper
-        return "${conversion(lower)} Kbps - ${conversion(upper)} Kbps"
+        return "${conversion(lower)} - ${conversion(upper)} "
     }
 
     fun inputChannelCount(codecInfo: MediaCodecInfo): String {
