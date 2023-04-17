@@ -80,7 +80,7 @@ class codecUtils(context: Context) {
         return tunneledPlayback.toString()
     }
 
-    fun partialAUperIB(codecInfo: MediaCodecInfo): String {
+    fun partialAccessUnitperIB(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val partial = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
         return "false"
@@ -88,21 +88,12 @@ class codecUtils(context: Context) {
 
 
 //audio
-
     fun bitrateRange(codecInfo: MediaCodecInfo): String {
         var lower =
             codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.lower
         var upper =
             codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).audioCapabilities.bitrateRange.upper
-        lower /= 1000
-        upper /= 1000
-//    when {
-//        lower < 1000 -> lower = ("$lower bps")
-//        maxBitrate < 1000000 -> ("${maxBitrate / 1000} kbps")
-//        maxBitrate < 1000000000 -> ("${maxBitrate / 1000000} Mbps")
-//        else -> ("${maxBitrate / 1000000000} Gbps")
-//    }
-        return "$lower Kbps - $upper Kbps"
+        return "${conversion(lower)} Kbps - ${conversion(upper)} Kbps"
     }
 
     fun inputChannelCount(codecInfo: MediaCodecInfo): String {
@@ -133,12 +124,7 @@ class codecUtils(context: Context) {
 
     fun maxBitrate(codecInfo: MediaCodecInfo): String {
         val maxBitrate = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0]).videoCapabilities.bitrateRange.upper
-        return when {
-            maxBitrate < 1000 -> ("$maxBitrate bps")
-            maxBitrate < 1000000 -> ("${maxBitrate / 1000} kbps")
-            maxBitrate < 1000000000 -> ("${maxBitrate / 1000000} Mbps")
-            else -> ("${maxBitrate / 1000000000} Gbps")
-        }
+        return conversion(maxBitrate)
     }
 
     fun supportedFrameRates(codecInfo: MediaCodecInfo): String {
@@ -234,30 +220,6 @@ class codecUtils(context: Context) {
         return value1
     }
 
-    //extra
-    fun conversion(int: Int) : String{
-        return when {
-            int < 1000  -> ("$int bps")
-            int < 1000000 -> ("${int / 1000} kbps")
-            int < 1000000000 -> ("${int / 1000000} Mbps")
-            else -> ("${int / 1000000000} Gbps")
-        }
-    }
-
-    fun fieldS(int: Int): String{
-        var value = ""
-        for (field in CodecProfileLevel::class.java.declaredFields) {
-            if (field.type.toString() == "int") {
-                val name = field.get(CodecProfileLevel()) as Int
-                if( name == int){
-                    value = field.name
-                    break
-                }
-            }
-        }
-        return value
-    }
-
     fun maxResolution(codecInfo: MediaCodecInfo): String {
         var maxReso = ""
         val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
@@ -307,7 +269,7 @@ class codecUtils(context: Context) {
         val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         var maxFrameRate = ""
         var result=""
-// Define the resolutions
+        // Define the resolutions
         val resolutions = listOf(
             Pair(144, 256),
             Pair(240, 426),
@@ -320,9 +282,8 @@ class codecUtils(context: Context) {
             Pair(4320, 7680)
         )
 
-// resolutions list will now contain a list of pairs representing the supported resolutions
-
-// Get the max frame rate for each resolution
+        // resolutions list will now contain a list of pairs representing the supported resolutions
+        // Get the max frame rate for each resolution
         for (resolution in resolutions) {
             if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
                 val maxFrameRate = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second).upper
@@ -334,6 +295,30 @@ class codecUtils(context: Context) {
             result+=i
         }
         return result
+    }
+
+    //extra
+    fun conversion(int: Int) : String{
+        return when {
+            int < 1000  -> ("$int bps")
+            int < 1000000 -> ("${int / 1000} kbps")
+            int < 1000000000 -> ("${int / 1000000} Mbps")
+            else -> ("${int / 1000000000} Gbps")
+        }
+    }
+
+    fun fieldS(int: Int): String{
+        var value = ""
+        for (field in CodecProfileLevel::class.java.declaredFields) {
+            if (field.type.toString() == "int") {
+                val name = field.get(CodecProfileLevel()) as Int
+                if( name == int){
+                    value = field.name
+                    break
+                }
+            }
+        }
+        return value
     }
 }
 

@@ -48,7 +48,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.supportedSampleRateRanges(i),
                         codecUtils.multipleAccessFrames(i),
                         codecUtils.tunneledPlayback(i),
-                        codecUtils.partialAUperIB(i),
+                        codecUtils.partialAccessUnitperIB(i),
                         codecUtils.getSupportedBitrateModes(i)
                     )
                 )
@@ -69,7 +69,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
                         codecUtils.isHDReditsupports(i),
                         codecUtils.multipleAccessFrames(i),
                         codecUtils.tunneledPlayback(i),
-                        codecUtils.partialAUperIB(i),
+                        codecUtils.partialAccessUnitperIB(i),
                         codecUtils.frameRatePerResolution(i)
                     )
                 )
