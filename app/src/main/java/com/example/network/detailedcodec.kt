@@ -3,6 +3,7 @@ package com.example.network
 import DetailAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.GridView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 class detailedcodec: AppCompatActivity() {
 
     private val detaileddata: ArrayList<DataModel> = ArrayList<DataModel>()
+    private lateinit var idGrid: GridView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_detail)
+        idGrid = findViewById(R.id.rvdetail)
 
         val extras = intent.extras
         if (extras != null) {
@@ -62,9 +65,9 @@ class detailedcodec: AppCompatActivity() {
                     detaileddata.add(DataModel("Max Bitrate", bitRateRange.toString()))
                     detaileddata.add(DataModel("Infra Refresh", infraRefresh.toString()))
                     detaileddata.add(DataModel("Max Resolution", maxReso.toString()))
-                    detaileddata.add(DataModel("Max Frame Rate per resoltuion", maxframe.toString()))
+
                     detaileddata.add(DataModel("Frame Rate", frame.toString()))
-                    detaileddata.add(DataModel("Profile Levels", profile.toString()))
+
                     detaileddata.add(DataModel("Color Formats", color.toString()))
                     detaileddata.add(DataModel("Dynamic Timestamp", dynamic.toString()))
                     detaileddata.add(DataModel("Supported Bitrate Modes", bitrateModes.toString()))
@@ -74,13 +77,13 @@ class detailedcodec: AppCompatActivity() {
                     detaileddata.add(DataModel("Multiple Access Frames", multiac.toString()))
                     detaileddata.add(DataModel("Tunneled playback", tunneledF.toString()))
                     detaileddata.add(DataModel("Partial Access Units per Input Buffer", partialFrame.toString()))
+                    detaileddata.add(DataModel("Profile Levels", profile.toString()))
+                    detaileddata.add(DataModel("Max Frame Rate per resolution", maxframe.toString()))
                 }
             }
             }
 
-        val recyclerview = findViewById<RecyclerView>(R.id.rvdetail)
-        recyclerview.layoutManager = LinearLayoutManager(this)
-        val adapter = DetailAdapter(detaileddata)
-        recyclerview.adapter = adapter
+        val adapter = DisplayAdapter(this, detaileddata)
+        idGrid.adapter = adapter
     }
 }

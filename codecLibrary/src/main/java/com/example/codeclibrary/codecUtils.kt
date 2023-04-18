@@ -6,14 +6,31 @@ import android.media.MediaCodecInfo
 import android.media.MediaCodecInfo.CodecProfileLevel
 import android.media.MediaCodecInfo.EncoderCapabilities.*
 import android.media.MediaCodecList
+import android.media.MediaFormat
 import android.os.Build
+import android.util.DisplayMetrics
 
 class codecUtils(context: Context) {
 
     var mediaCodecList = MediaCodecList(MediaCodecList.ALL_CODECS).codecInfos
     var array1: ArrayList<String> = ArrayList<String>()
     var value1: String = ""
-
+    val resolutions = listOf(
+        Pair(144, 256),
+        Pair(144, 176),
+        Pair(240, 426),
+        Pair(240, 320),
+        Pair(360, 480),
+        Pair(360, 640),
+        Pair(480, 640),
+        Pair(480, 854),
+        Pair(576, 720),
+        Pair(720, 1280),
+        Pair(1080, 1920),
+        Pair(1440, 2560),
+        Pair(2160, 3840),
+        Pair(4320, 7680)
+    )
     fun name(codecInfo: MediaCodecInfo): String {
         return codecInfo.name
     }
@@ -83,7 +100,7 @@ class codecUtils(context: Context) {
     fun partialAccessUnitperIB(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val partial = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_PartialFrame)
-        return "false"
+        return partial.toString()
     }
 
 
@@ -236,65 +253,81 @@ class codecUtils(context: Context) {
         return maxReso
     }
 
-    val displayMetrics = context.resources.displayMetrics
     fun frameRatePerResolution(codecInfo: MediaCodecInfo): String {
-
-        val height = displayMetrics.heightPixels
-        val width = displayMetrics.widthPixels
-        val codecList = MediaCodecList(MediaCodecList.ALL_CODECS)
         val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         var maxFrameRate = ""
 
-        for (codecInfo in codecList.codecInfos) {
-            if (codecCapabilities.videoCapabilities.isSizeSupported(width, height)) {
+        for (resolution in resolutions) {
+            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
                 var maxFrameRateLow =
                     (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
-                        width,
-                        height
+                        resolution.first,
+                        resolution.second
                     ).lower).toInt()
                 var maxFrameRateHigh =
                     (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
-                        width,
-                        height
+                        resolution.first,
+                        resolution.second
                     ).upper).toInt()
 
                 maxFrameRate = "$maxFrameRateLow-$maxFrameRateHigh fps"
             }
+            else if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.second, resolution.first)) {
+                var maxFrameRateLow =
+                    (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
+                        resolution.second,
+                        resolution.first
+                    ).lower).toInt()
+                var maxFrameRateHigh =
+                    (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
+                        resolution.second,
+                        resolution.first
+                    ).upper).toInt()
+
+                maxFrameRate = "$maxFrameRateLow-$maxFrameRateHigh fps"
+            }
+
         }
         return maxFrameRate
 
     }
 
     fun maxFrameRatePerResolution(codecInfo: MediaCodecInfo): String {
-        val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        var maxFrameRate = ""
-        var result=""
-        // Define the resolutions
-        val resolutions = listOf(
-            Pair(144, 256),
-            Pair(240, 426),
-            Pair(360, 640),
-            Pair(480, 854),
-            Pair(720, 1280),
-            Pair(1080, 1920),
-            Pair(1440, 2560),
-            Pair(2160, 3840),
-            Pair(4320, 7680)
-        )
 
-        // resolutions list will now contain a list of pairs representing the supported resolutions
-        // Get the max frame rate for each resolution
+        var width:Boolean=false
+        val maxFrameRates = mutableMapOf<Pair<Int, Int>, Int>()
+        val sb = StringBuilder()
         for (resolution in resolutions) {
-            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
-                val maxFrameRate = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second).upper
-                array1.add ("${resolution.first}p: ${maxFrameRate.toInt()} fps\n")
+            val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
+            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)){
+                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second)
+                val maxFrameRate = frameRates.upper.toInt()
+                maxFrameRates[resolution] = maxFrameRate
+                width=true
+            }
+            else if(codecCapabilities.videoCapabilities.isSizeSupported(resolution.second, resolution.first)){
+                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.second, resolution.first)
+                val maxFrameRate = frameRates.upper.toInt()
+                maxFrameRates[resolution] = maxFrameRate
+            }
+        }
+
+        if(width==true) {
+            for ((resolution, maxFrameRate) in maxFrameRates) {
+
+                    sb.append("${resolution.first} X ${resolution.second}: $maxFrameRate fps\n")
+
+            }
+        }else {
+            for ((resolution, maxFrameRate) in maxFrameRates) {
+
+                    sb.append("${resolution.second} X ${resolution.first}: $maxFrameRate fps\n")
 
             }
         }
-        for(i in array1){
-            result+=i
-        }
-        return result
+        val output = sb.toString()
+        return output
+
     }
 
     //extra

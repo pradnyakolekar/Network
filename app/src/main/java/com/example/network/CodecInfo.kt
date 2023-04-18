@@ -5,6 +5,7 @@ import android.content.Intent
 import android.media.MediaRecorder.VideoEncoder.*
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.annotation.RequiresApi
