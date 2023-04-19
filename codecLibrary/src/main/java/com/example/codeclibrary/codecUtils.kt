@@ -172,7 +172,7 @@ class codecUtils(context: Context) {
                 val formats = info.getCapabilitiesForType(mimeType).colorFormats
                 for (format in formats) {
                     for (field in MediaCodecInfo.CodecCapabilities::class.java.declaredFields) {
-                        Log.e("Codec Capabilities", "field: ${field.toString()}");
+                       // Log.e("Codec Capabilities", "field: ${field.toString()}");
                         //val name = field.get(MediaCodecInfo.CodecCapabilities()) as Int
                         if (field.type.toString() == "int"
                             && !field.name.contains("mError")
@@ -203,33 +203,18 @@ class codecUtils(context: Context) {
     fun getSupportedBitrateModes(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         value = codecInfo.name.lowercase()
-        if (value.contains("encoder")) {
-            value = "Constant bitrate (CBR): ${
-                capabilities.encoderCapabilities.isBitrateModeSupported(BITRATE_MODE_CBR)
-            } \n"
-            value += "Constant Quality (CQ): ${
-                capabilities.encoderCapabilities.isBitrateModeSupported(
-                    BITRATE_MODE_CQ
-                )
-            } \n"
-            value += "Variable bitrate (VBR): ${
-                capabilities.encoderCapabilities.isBitrateModeSupported(
-                    BITRATE_MODE_VBR
-                )
-            } \n"
-            value += "Constant bitrate (CBR): ${
-                capabilities.encoderCapabilities.isBitrateModeSupported(
-                    BITRATE_MODE_CBR_FD
-                )
-            } \n"
+        if(value.contains("encoder")){
+            value = "Constant bitrate (CBR): ${capabilities.encoderCapabilities.isBitrateModeSupported(BITRATE_MODE_CBR)} \n"
+            value += "Constant Quality (CQ): ${capabilities.encoderCapabilities.isBitrateModeSupported(BITRATE_MODE_CQ) } \n"
+            value += "Variable bitrate (VBR): ${capabilities.encoderCapabilities.isBitrateModeSupported(BITRATE_MODE_VBR)} \n"
+            value += "Constant bitrate (CBR): ${capabilities.encoderCapabilities.isBitrateModeSupported(BITRATE_MODE_CBR_FD)} \n"
             return value
         } else {
             return "null"
         }
     }
 
-    //need to verify
-    fun isHDReditsupports(codecInfo: MediaCodecInfo): String {
+    fun isHDReditsupports(codecInfo: MediaCodecInfo): String{
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
         val profileLevels = capabilities.profileLevels
         if (profileLevels.any { it.profile == MediaCodecInfo.CodecProfileLevel.AVCProfileHigh && it.level >= MediaCodecInfo.CodecProfileLevel.AVCLevel31 }) {
@@ -242,25 +227,19 @@ class codecUtils(context: Context) {
 
     fun adaptivePlayback(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        value =
-            capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback)
-                .toString()
+        value = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_AdaptivePlayback).toString()
         return value
     }
 
     fun securePlayback(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        value =
-            capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_SecurePlayback)
-                .toString()
+        value= capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_SecurePlayback).toString()
         return value
     }
 
     fun infraRefresh(codecInfo: MediaCodecInfo): String {
         val capabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-        value =
-            capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_IntraRefresh)
-                .toString()
+        value = capabilities.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_IntraRefresh).toString()
         return value
     }
 
@@ -271,7 +250,10 @@ class codecUtils(context: Context) {
         for (level in levels) {
             value1 += "${fieldS(level.profile)}: ${fieldS(level.level)} \n"
         }
-        return value1
+        if(value1.isNotEmpty()) {
+            return value1
+        }
+            return "null"
     }
 
     fun maxResolution(codecInfo: MediaCodecInfo): String {
@@ -295,11 +277,7 @@ class codecUtils(context: Context) {
         var maxFrameRate = ""
 
         for (resolution in resolutions) {
-            if (codecCapabilities.videoCapabilities.isSizeSupported(
-                    resolution.first,
-                    resolution.second
-                )
-            ) {
+            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)) {
                 var maxFrameRateLow =
                     (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
                         resolution.first,
@@ -312,11 +290,8 @@ class codecUtils(context: Context) {
                     ).upper).toInt()
 
                 maxFrameRate = "$maxFrameRateLow-$maxFrameRateHigh fps"
-            } else if (codecCapabilities.videoCapabilities.isSizeSupported(
-                    resolution.second,
-                    resolution.first
-                )
-            ) {
+            }
+            else if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.second, resolution.first)) {
                 var maxFrameRateLow =
                     (codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
                         resolution.second,
@@ -343,42 +318,29 @@ class codecUtils(context: Context) {
         val sb = StringBuilder()
         for (resolution in resolutions) {
             val codecCapabilities = codecInfo.getCapabilitiesForType(codecInfo.supportedTypes[0])
-            if (codecCapabilities.videoCapabilities.isSizeSupported(
-                    resolution.first,
-                    resolution.second
-                )
-            ) {
-                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
-                    resolution.first,
-                    resolution.second
-                )
+            if (codecCapabilities.videoCapabilities.isSizeSupported(resolution.first, resolution.second)){
+                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.first, resolution.second)
                 val maxFrameRate = frameRates.upper.toInt()
                 maxFrameRates[resolution] = maxFrameRate
-                width = true
-            } else if (codecCapabilities.videoCapabilities.isSizeSupported(
-                    resolution.second,
-                    resolution.first
-                )
-            ) {
-                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(
-                    resolution.second,
-                    resolution.first
-                )
+                width=true
+            }
+            else if(codecCapabilities.videoCapabilities.isSizeSupported(resolution.second, resolution.first)){
+                val frameRates = codecCapabilities.videoCapabilities.getSupportedFrameRatesFor(resolution.second, resolution.first)
                 val maxFrameRate = frameRates.upper.toInt()
                 maxFrameRates[resolution] = maxFrameRate
             }
         }
 
-        if (width == true) {
+        if(width==true) {
             for ((resolution, maxFrameRate) in maxFrameRates) {
 
-                sb.append("${resolution.first} X ${resolution.second}: $maxFrameRate fps\n")
+                    sb.append("${resolution.first} X ${resolution.second}: $maxFrameRate fps\n")
 
             }
-        } else {
+        }else {
             for ((resolution, maxFrameRate) in maxFrameRates) {
 
-                sb.append("${resolution.second} X ${resolution.first}: $maxFrameRate fps\n")
+                    sb.append("${resolution.second} X ${resolution.first}: $maxFrameRate fps\n")
 
             }
         }

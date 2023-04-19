@@ -100,7 +100,8 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
     override fun onItemClick(list: List<DataModel2>, position: Int) {
         val item = list[position]
         val intent = Intent(this, detailedcodec::class.java)
-        intent.putExtra("name", item.desc)
+        intent.putExtra("name", item.title )
+        intent.putExtra("desc", item.desc)
         intent.putExtra("hwacc", item.hwAcc)
         intent.putExtra("swonly", item.swonly)
         intent.putExtra("vendor", item.vendor)
@@ -121,7 +122,7 @@ class CodecInfo : AppCompatActivity(), RecyclerAdapter.CodecItemClicked, View.On
         intent.putExtra("adaptivePlayback", item.adaptivePlayback)
         intent.putExtra("securePlayback", item.securePlayback)
         intent.putExtra("infraRefresh", item.infraRefresh)
-        intent.putExtra("partialFrame", item.partailframe)
+        intent.putExtra("partialframe", item.partialframe)
         startActivity(intent)
     }
 

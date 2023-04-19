@@ -25,7 +25,7 @@ data class DataModel2 (
     var color:String?,
     var dynamic:String,
     var multiaccess:String,
-    var partailframe:String,
+    var partialframe:String,
     var tunneledframe:String,
     var maxReso:String?,
     var frame:String?,
