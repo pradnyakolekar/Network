@@ -5,30 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:background="@color/background"
     android:gravity="center"
     tools:context=".MainActivity">
-
-<!--    <TextView-->
-<!--        android:id="@+id/ntwspeed"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:text="ntwspeed"-->
-<!--         />-->
-<!--    <TextView-->
-<!--        android:id="@+id/ntwtype"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:text="ntwtype"-->
-<!--         />-->
-<!--    <Button-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/checknetworkbtn"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:text="Check Network"/>-->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -39,13 +18,15 @@
             android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="display"/>
+            android:text="display"
+            android:textColor="@color/textcolor"/>
 
         <Button
             android:id="@+id/drm"
             android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/textcolor"
             android:text="drm"/>
 
         <Button
@@ -53,7 +34,8 @@
             android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="codec"/>
+            android:text="codec"
+            android:textColor="@color/textcolor"/>
     </LinearLayout>
 
 

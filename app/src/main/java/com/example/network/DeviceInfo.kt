@@ -8,6 +8,8 @@ import android.util.Log
 import android.widget.GridView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.devicelibrary.*
 import com.google.android.exoplayer2.C
 import java.util.*
@@ -15,7 +17,8 @@ import kotlin.collections.ArrayList
 
 class DeviceInfo : AppCompatActivity() {
 
-    private lateinit var idGrid: GridView
+    private lateinit var idGrid: RecyclerView
+    private lateinit var recyclerViewAdapter: DisplayAdapter
     private lateinit var id: String
 
 
@@ -24,7 +27,7 @@ class DeviceInfo : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_deviceinfo)
-        idGrid = findViewById(R.id.idGRV)
+        idGrid = findViewById<RecyclerView>(R.id.idGRV)
 
         val bundle = intent.extras
         if (bundle != null) {
@@ -70,14 +73,20 @@ class DeviceInfo : AppCompatActivity() {
 
 
         if (id == "display") {
-            val adapter = DisplayAdapter(this, dataModelArrayList)
-            idGrid.adapter = adapter
+            val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            idGrid.layoutManager = layoutManager
+            recyclerViewAdapter = DisplayAdapter(this, dataModelArrayList)
+            idGrid.adapter = recyclerViewAdapter
         } else if (id == "drm") {
-            val adapter = DisplayAdapter(this, drmdataModelArrayList)
-            idGrid.adapter = adapter
+            val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            idGrid.layoutManager = layoutManager
+            recyclerViewAdapter = DisplayAdapter(this, drmdataModelArrayList)
+            idGrid.adapter = recyclerViewAdapter
         } else {
-            val adapter = DisplayAdapter(this, drmdataModelArrayList)
-            idGrid.adapter = adapter
+            val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            idGrid.layoutManager = layoutManager
+            recyclerViewAdapter = DisplayAdapter(this, drmdataModelArrayList)
+            idGrid.adapter = recyclerViewAdapter
         }
     }
 }

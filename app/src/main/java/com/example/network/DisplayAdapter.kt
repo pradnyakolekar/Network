@@ -4,45 +4,32 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 
-class DisplayAdapter(private val context: Context, private val dataModelArrayList: List<DataModel>) : BaseAdapter() {
+class DisplayAdapter(private val context: Context, private val dataModelArrayList: List<DataModel>) : RecyclerView.Adapter<DisplayAdapter.ViewHolder>() {
 
-        private var layoutInflater: LayoutInflater? = null
-        private lateinit var title: TextView
-        private lateinit var desc: TextView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_griditem, parent, false)
+        return ViewHolder(view)
+    }
 
-        override fun getCount(): Int {
-            return dataModelArrayList.size
-        }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        override fun getItem(position: Int): Any? {
-            return null
-        }
+        val item = dataModelArrayList[position]
 
-        override fun getItemId(position: Int): Long {
-            return 0
-        }
+        holder.title.text = item.title
+        holder.desc.text = item.desc
+    }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-            var convertView = convertView
-            if (layoutInflater == null) {
-                layoutInflater =
-                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            }
-            if (convertView == null) {
-                convertView = layoutInflater!!.inflate(R.layout.layout_griditem, null)
-            }
+    override fun getItemCount(): Int {
+        return dataModelArrayList.size
+    }
 
-            title = convertView!!.findViewById(R.id.title)
-            desc = convertView!!.findViewById(R.id.desc)
-
-            title.setText(dataModelArrayList.get(position).gettitle())
-            desc.setText(dataModelArrayList.get(position).getdesc())
-
-            return convertView
-        }
+    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+        val title: TextView = itemView.findViewById(R.id.title)
+        val desc: TextView = itemView.findViewById(R.id.desc)
+    }
 }
 

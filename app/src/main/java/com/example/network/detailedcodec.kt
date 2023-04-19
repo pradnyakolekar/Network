@@ -7,17 +7,19 @@ import android.widget.GridView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class detailedcodec: AppCompatActivity() {
 
     private val detaileddata: ArrayList<DataModel> = ArrayList<DataModel>()
-    private lateinit var idGrid: GridView
+    private lateinit var recyclerViewAdapter: DisplayAdapter
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_detail)
-        idGrid = findViewById(R.id.rvdetail)
+
 
         val extras = intent.extras
         if (extras != null) {
@@ -86,8 +88,10 @@ class detailedcodec: AppCompatActivity() {
                 }
             }
         }
-
-        val adapter = DisplayAdapter(this, detaileddata)
-        idGrid.adapter = adapter
+        val recyclerview = findViewById<RecyclerView>(R.id.rvdetail)
+        val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerview.layoutManager = layoutManager
+        recyclerViewAdapter = DisplayAdapter(this, detaileddata)
+        recyclerview.adapter = recyclerViewAdapter
     }
 }

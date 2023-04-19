@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-        <GridView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvdetail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
             android:focusable="true"
-            android:numColumns="2"
-            android:verticalSpacing="3dp"
             android:layout_marginTop="5dp"
             android:paddingBottom="5dp"
             app:layout_constraintStart_toStartOf="parent"
