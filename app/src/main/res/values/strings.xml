@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Device Info</string>
+    <string name="info"><u>Click for more info</u></string>
 </resources>

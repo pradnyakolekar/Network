@@ -18,7 +18,7 @@
             android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="display"
+            android:text="Device"
             android:textColor="@color/textcolor"/>
 
         <Button
@@ -28,6 +28,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textcolor"
             android:text="drm"/>
+
+        <Button
+            android:id="@+id/network"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textcolor"
+            android:text="Network"/>
 
         <Button
             android:id="@+id/codec"

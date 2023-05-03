@@ -2,10 +2,9 @@ package com.example.network
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.media.MediaCodecList
-import android.media.MediaFormat
 import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
 import android.provider.Settings
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +20,10 @@ class MainActivity : AppCompatActivity(){
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         val btndisplay = findViewById<Button>(R.id.display)
         val btndrm = findViewById<Button>(R.id.drm)
+        val btnnetwork=findViewById<Button>(R.id.network)
         val btncodec = findViewById<Button>(R.id.codec)
+        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         btndisplay.setOnClickListener(){
             val bundle = Bundle()
@@ -33,6 +35,14 @@ class MainActivity : AppCompatActivity(){
         btndrm.setOnClickListener(){
             val bundle = Bundle()
             bundle.putString("id", "drm")
+            val intent = Intent(this, DeviceInfo::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+
+        btnnetwork.setOnClickListener(){
+            val bundle = Bundle()
+            bundle.putString("id", "network")
             val intent = Intent(this, DeviceInfo::class.java)
             intent.putExtras(bundle)
             startActivity(intent)

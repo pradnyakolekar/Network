@@ -1,12 +1,25 @@
 package com.example.devicelibrary
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.*
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.Build
+import android.text.format.Formatter
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Display
 import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.core.view.DisplayCompat
+import okhttp3.*
+import java.net.*
+import java.util.*
+import android.telephony.*
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
+import java.math.BigInteger
 
 class DeviceUtils(context: Context) {
     val displayManager = DisplayManagerCompat.getInstance(context)
@@ -49,9 +62,14 @@ class DeviceUtils(context: Context) {
     }
 
 
-    fun deviceName(): String {
+    fun manufacturerName(): String {
         val brand = Build.BRAND
-        return brand
+        return "${brand.capitalize()}"
+    }
+
+    fun modelName(): String {
+        val model = Build.MODEL
+        return "$model"
     }
 
     fun displayModes(): String {
@@ -201,5 +219,233 @@ class DeviceUtils(context: Context) {
             Log.i("hdr values", i.toString())
         }
         return value1
+    }
+
+    @SuppressLint("ServiceCast")
+    fun ipAddress(context: Context): String {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return "null"
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return "null"
+        return when {
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Formatter.formatIpAddress(wifiManager.connectionInfo.ipAddress)
+            }
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> getMobileIPAddressString().toString()
+            else -> "null"
+        }
+    }
+
+
+    fun getNetworkType(context: Context): String {
+        val mConnectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val mInfo = mConnectivityManager.activeNetworkInfo
+        if (mInfo == null || !mInfo.isConnected) return "-"
+        if (mInfo.type == ConnectivityManager.TYPE_WIFI) return "WIFI"
+        if (mInfo.type == ConnectivityManager.TYPE_MOBILE) {
+            return when (mInfo.subtype) {
+                TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_CDMA, TelephonyManager.NETWORK_TYPE_1xRTT, TelephonyManager.NETWORK_TYPE_IDEN, TelephonyManager.NETWORK_TYPE_GSM -> "2G"
+                TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_EVDO_0, TelephonyManager.NETWORK_TYPE_EVDO_A, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_EVDO_B, TelephonyManager.NETWORK_TYPE_EHRPD, TelephonyManager.NETWORK_TYPE_HSPAP, TelephonyManager.NETWORK_TYPE_TD_SCDMA -> "3G"
+                TelephonyManager.NETWORK_TYPE_LTE, TelephonyManager.NETWORK_TYPE_IWLAN, 19 -> "4G"
+                TelephonyManager.NETWORK_TYPE_NR -> "5G"
+                else -> "?"
+            }
+        }
+        return "?"
+    }
+
+
+
+    fun getCurrentNetworkBandwidth(context: Context): String {
+// Get the ConnectivityManager
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+// Get the active network
+        val network = connectivityManager.activeNetwork ?: return "false"
+
+// Get the network capabilities
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return "false"
+
+// Get the download speed in Mbps
+        val downloadSpeedMbps = networkCapabilities.linkDownstreamBandwidthKbps / (1000.0)
+
+// Get the upload speed in Mbps
+        val uploadSpeedMbps = networkCapabilities.linkUpstreamBandwidthKbps / (1000.0)
+
+        // Print the results
+        return String.format("Download: %.2f Mbps\n Upload: %.2f Mbps".format(downloadSpeedMbps, uploadSpeedMbps))
+    }
+
+
+    //Generate normal IP address
+    fun getIPAddress(): String? {
+        try {
+            val interfaces = NetworkInterface.getNetworkInterfaces()
+            while (interfaces.hasMoreElements()) {
+                val networkInterface = interfaces.nextElement()
+                val addresses = networkInterface.inetAddresses
+                while (addresses.hasMoreElements()) {
+                    val address = addresses.nextElement()
+                    if (!address.isLinkLocalAddress && !address.isLoopbackAddress && address is InetAddress) {
+                        return address.hostAddress
+                    }
+                }
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return null
+    }
+
+
+    //ipv4 and ipv6 address
+    fun getMobileIPAddress(): Pair<List<String>, List<String>> {
+        val ipv4Addresses = mutableListOf<String>()
+        val ipv6Addresses = mutableListOf<String>()
+        try {
+            val interfaces = NetworkInterface.getNetworkInterfaces()
+            while (interfaces.hasMoreElements()) {
+                val networkInterface = interfaces.nextElement()
+                val inetAddresses = networkInterface.inetAddresses
+                while (inetAddresses.hasMoreElements()) {
+                    val address = inetAddresses.nextElement()
+                    if (!address.isLinkLocalAddress && !address.isLoopbackAddress) {
+                        if (address is Inet4Address) {
+                            ipv4Addresses.add(address.hostAddress)
+                        } else if (address is Inet6Address) {
+                            ipv6Addresses.add(address.hostAddress)
+                        }
+                    }
+                }
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        return Pair(ipv4Addresses, ipv6Addresses)
+    }
+    fun getMobileIPAddressString(): Pair<String, String> {
+        val (ipv4Addresses, ipv6Addresses) = getMobileIPAddress()
+        val ipv4String = ipv4Addresses.joinToString(separator = ",\n")
+        val ipv6String = ipv6Addresses.joinToString(separator = ",\n")
+        return Pair("ipv4:$ipv4String\n","ipv6:$ipv6String")
+    }
+
+    fun getNetworkSpeed1(context: Context): String {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var downSpeed=""
+        var upSpeed=""
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val nc = cm.getNetworkCapabilities(cm.activeNetwork)
+            downSpeed = (nc?.linkDownstreamBandwidthKbps)?.div(1000).toString()
+            upSpeed = (nc?.linkUpstreamBandwidthKbps)?.div(1000).toString()
+            return "Download: $downSpeed\nUpload: $upSpeed"
+        }
+        else{
+            "-"
+        }
+
+
+    }
+
+fun connectivity(context: Context): String {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val networkInfo = connectivityManager.activeNetworkInfo
+
+    if (networkInfo != null && networkInfo.isConnected) {
+        try {
+            val url = URL("https://www.google.com")
+            val urlConnection = url.openConnection() as HttpURLConnection
+            urlConnection.connectTimeout = 5000 // Set timeout to 5 seconds
+            val statusCode = urlConnection.responseCode
+
+            if (statusCode == 200) {
+                return "Internet is available"
+            } else {
+                return "Internet is not available"
+            }
+        } catch (e: Exception) {
+            return "Internet is not available"
+        }
+    } else {
+        return "No network connection is not available"
+    }
+
+}
+
+    fun getNetworkOperatorName(context: Context): String {
+        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val operator= telephonyManager.networkOperatorName
+        if(operator.isNotEmpty()){
+            return operator
+        }
+        else{
+            return "Wifi Vendor"
+        }
+    }
+
+    fun dhcp(context: Context): String {
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val dhcpInfo = wifiManager.dhcpInfo
+        val dhcpServerAddress = Formatter.formatIpAddress(dhcpInfo.serverAddress)
+        if(dhcpServerAddress.equals("0.0.0.0")) {
+            return "Not connected to Wifi"
+        }
+        else{
+            return dhcpServerAddress
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun getMobileSignalStrength(context: Context): String {
+        val telephonyManager =
+            context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val signalStrength = telephonyManager.signalStrength
+        if (signalStrength != null) {
+            return "${signalStrength.cellSignalStrengths.get(0).dbm} dBm"
+        }
+        return "Only Wifi supported"
+    }
+
+
+    fun rssi(context: Context):String{
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        val rssi = wifiInfo.rssi
+        return "$rssi dBm"
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun strength(context: Context):String{
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        if (wifiManager.isWifiEnabled) {
+            val wifiInfo = wifiManager.connectionInfo
+            val rssi = wifiInfo.rssi
+            return "$rssi dBm (WiFi)"
+        } else {
+            val telephonyManager =
+                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val signalStrength = telephonyManager.signalStrength
+            if (signalStrength != null) {
+                return "${signalStrength.cellSignalStrengths.get(0).dbm} dBm (Cellular)"
+
+            }
+        }
+        return "Unknown"
+    }
+
+    fun getNetworkBandwidth(connectivityManager: ConnectivityManager): Long {
+        val activeNetwork: Network? = connectivityManager.activeNetwork
+        val networkCapabilities: NetworkCapabilities? =
+            connectivityManager.getNetworkCapabilities(activeNetwork)
+
+        return networkCapabilities?.linkDownstreamBandwidthKbps?.toLong() ?: 0L
+    }
+
+    fun bandwidth(context: Context):String{
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val bandwidth = getNetworkBandwidth(connectivityManager)
+        return "$bandwidth"
+
     }
 }

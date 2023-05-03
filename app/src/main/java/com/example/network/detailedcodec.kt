@@ -1,11 +1,8 @@
 package com.example.network
 
-import DetailAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.GridView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 

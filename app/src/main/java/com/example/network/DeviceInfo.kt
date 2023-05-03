@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.media.MediaDrm
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.GridView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -39,9 +37,11 @@ class DeviceInfo : AppCompatActivity() {
         val drm=DrmUtils(mediaDrm)
         val dataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
         val drmdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
+        val networkdataModelArrayList: ArrayList<DataModel> = ArrayList<DataModel>()
 
         //device info
-        dataModelArrayList.add(DataModel("Device Name", device.deviceName()))
+        dataModelArrayList.add(DataModel("Manufacturer Name", device.manufacturerName()))
+        dataModelArrayList.add(DataModel("Model Name", device.modelName()))
         dataModelArrayList.add(DataModel("Resolution", device.getDeviceResolution()))
         dataModelArrayList.add(DataModel("Resolution Type", device.display()))
         dataModelArrayList.add(DataModel("Smallest Width", "${device.smallestWidth()} dp"))
@@ -54,6 +54,16 @@ class DeviceInfo : AppCompatActivity() {
         dataModelArrayList.add(DataModel("Luminance", "Max:${device.maxLum()} nits\nMin:${device.minLum()} nits"))
         dataModelArrayList.add(DataModel("Pixels Per Inch", "X: ${device.xppi()} ppi\nY: ${device.yppi()} ppi"))
         dataModelArrayList.add(DataModel("HDR", device.hdr()))
+
+
+        //network info
+        networkdataModelArrayList.add(DataModel("IP address", device.ipAddress(this).replace("(","").replace(")","")))
+        networkdataModelArrayList.add(DataModel("Network Type", device.getNetworkType(this)))
+        networkdataModelArrayList.add(DataModel("Bandwidth", device.getCurrentNetworkBandwidth(this)))
+        networkdataModelArrayList.add(DataModel("Internet Availability", device.connectivity(this)))
+        networkdataModelArrayList.add(DataModel("Operator", device.getNetworkOperatorName(this)))
+        networkdataModelArrayList.add(DataModel("DHCP", device.dhcp(this)))
+        networkdataModelArrayList.add(DataModel("Signal Strength", device.strength(this)))
 
         //drm info
         drmdataModelArrayList.add(DataModel("Vendor", drm.vendor()))
@@ -82,7 +92,13 @@ class DeviceInfo : AppCompatActivity() {
             idGrid.layoutManager = layoutManager
             recyclerViewAdapter = DisplayAdapter(this, drmdataModelArrayList)
             idGrid.adapter = recyclerViewAdapter
-        } else {
+        }
+        else if (id == "network") {
+            val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            idGrid.layoutManager = layoutManager
+            recyclerViewAdapter = DisplayAdapter(this, networkdataModelArrayList)
+            idGrid.adapter = recyclerViewAdapter
+        }else {
             val layoutManager: RecyclerView.LayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             idGrid.layoutManager = layoutManager
             recyclerViewAdapter = DisplayAdapter(this, drmdataModelArrayList)
